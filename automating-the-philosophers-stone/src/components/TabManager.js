@@ -12,6 +12,12 @@ import FormulaTab from './FormulaTab';
 function TabManager(props) {
     let [tab, setTab] = useState("Generators")
 
+
+    // Count of generator for each element
+   let [fireAmount, setFireAmount] = useState(0);
+   let [waterAmount, setWaterAmount] = useState(0);
+   let [earthAmount, setEarthAmount] = useState(0);
+
   return (
     
     <div className="TabContainer">
@@ -27,12 +33,14 @@ function TabManager(props) {
       </div>
 
       <div id="tabs">
-        <div className={tab!="Generators" ? "hiddenTab" : undefined}><GeneratorTab getValue={props.getValue} setValue={props.setValue} addValue={props.addValue} formatValues={props.formatValues}/></div>
-        <div className={tab!="Upgrades" ? "hiddenTab" : undefined}><UpgradesTab /></div>
-        <div className={tab!="Philosophers" ? "hiddenTab" : undefined}><PhilosophersTab /></div>
-        <div className={tab!="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab /></div>
-        <div className={tab!="Options" ? "hiddenTab" : undefined}><OptionsTab /></div>
-        <div className={tab!="Formulas" ? "hiddenTab" : undefined}><FormulaTab getValue={props.getValue} foramtValues={props.formatValues}/></div>
+        <div className={tab!=="Generators" ? "hiddenTab" : undefined}><GeneratorTab fireAmount={fireAmount} setFireAmount={setFireAmount} waterAmount={waterAmount} setWaterAmount={setWaterAmount}
+                earthAmount={earthAmount} setEarthAmount={setEarthAmount}
+                getValue={props.getValue} setValue={props.setValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount}/></div>
+        <div className={tab!=="Upgrades" ? "hiddenTab" : undefined}><UpgradesTab fireAmount={fireAmount} waterAmount={waterAmount} earthAmount={earthAmount} getValue={props.getValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount} buyUpgrade={props.buyUpgrade} getUpgradeCost={props.getUpgradeCost}/></div>
+        <div className={tab!=="Philosophers" ? "hiddenTab" : undefined}><PhilosophersTab /></div>
+        <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab /></div>
+        <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab /></div>
+        <div className={tab!=="Formulas" ? "hiddenTab" : undefined}><FormulaTab getValue={props.getValue} foramtValues={props.formatValues}/></div>
       </div>
     </div>
   );

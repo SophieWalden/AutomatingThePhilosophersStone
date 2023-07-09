@@ -2,6 +2,9 @@
 
 #GeneratorsfirstRow{
     height: 38vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 #GeneratorssecondRow{
@@ -19,4 +22,38 @@
 
 .Generator h4{
     font-size: 1.0vw;
+}
+
+.Generator p{
+    font-size: 1.0vw;
+}
+
+#fireGenerator{
+    background-color: #a43f53;
+    border: #53354A solid 2px;
+    border-radius: 15px;
+}
+
+#fireGenerator:hover{
+    background-color: #903749;
+}
+
+#waterGenerator{
+    background-color: #326ecd;
+    border: #53354A solid 2px;
+    border-radius: 15px;
+}
+
+#waterGenerator:hover{
+    background-color: #2d62b7;
+}
+
+#earthGenerator{
+    background-color: #9E7323;
+    border: #53354A solid 2px;
+    border-radius: 15px;
+}
+
+#earthGenerator:hover{
+    background-color: #8F6820;
 }
