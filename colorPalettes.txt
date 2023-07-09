@@ -1,0 +1,8 @@
+Base Palette:
+Background: 2B2E4A
+Regular Font: FFFFFF
+Special Font: E84545
+
+Fire
+Main: 903749
+Dull (locked): 53354A

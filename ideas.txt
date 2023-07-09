@@ -1,0 +1,40 @@
+Theme: Energy=Matter
+Optional Theme: Minimal Clicks (dont have to go through that one)
+
+Automating the Philosophers Stone
+
+Story: You are dying with not much time left in your life, you're not ready to be taken yet though, take up alchemy to get the philospohers stone and fight back
+
+
+Energy = Matter
+A game where you can convert anything, even upgrades, into energy and your goal is to produce as much as possible
+
+You will have one central resource to control: energy
+Your energy will go up based on how much of each is produced
+Don't like an upgrade? Click on it again to disable it? (Non renewable upgrades? Or do I need a system to force a reset)
+
+It could be a rebirth stlye where you have to restart the game, but you get all your energy back to spend again
+I could take the alchemist table and use the elements aswell.
+
+
+First few upgrades could just have simple energy generators, energy upgrades should be in terms of 1e10 
+This is so that it could be balanced and every tier below can easily be bought.
+
+There should be a reason to respec, a reason to not buy every upgrade though.
+Maybe certain upgrades can't be bought together, is there a decent way to make upgrades exclusive
+
+It could be like a prestige tree unlock system with certain unlocks and you can only unlock certain materials which have certain perks
+Using costs. This means certain upgrades are locked under a system which have to be contiually unlocked throuhg resetting and trying differnet combinations.
+
+Start with fire and energy unlocked, unlock other on the side as you go until you reach like 100 energy at which point you can bank the points in the philospohers stone to gain upgrades
+
+
+
+
+Six elements: fire, water, earth, air, space, and aether. 
+Each of these will have it own sets of 7 upgrades: 6 one time optimizers and 1 renewable multiplier buyer which are different for each element.
+Once you have 100 fire you unlock water, as you need one element to kickstart the other, the generations generate their own element which can be used separately.
+
+7 Challenges which are each of the 7 alchemical metals.
+
+

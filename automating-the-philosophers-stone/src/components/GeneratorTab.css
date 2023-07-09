@@ -1,0 +1,22 @@
+
+
+#GeneratorsfirstRow{
+    height: 38vh;
+}
+
+#GeneratorssecondRow{
+    height: 38vh;
+}
+
+.Generator{
+    width: 15vw;
+    height: 30vh;
+}
+
+.Generator h3{
+    font-size: 1.5vw;
+}
+
+.Generator h4{
+    font-size: 1.0vw;
+}
