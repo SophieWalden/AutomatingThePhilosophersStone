@@ -24,3 +24,33 @@
     font-size: 0.75vw;
     height: 4vh;
 }
+
+#fireUpgrades button{
+    background-color: #a43f53;
+    border: #53354A solid 2px;
+}
+
+#waterUpgrades button{
+    background-color: #326ecd;
+    border: #53354A solid 2px;
+}
+
+#earthUpgrades button{
+    background-color: #9E7323;
+    border: #53354A solid 2px;
+}
+
+#fireUpgrades button:disabled{
+    background-color:#732635;
+    color: black;
+}
+
+#waterUpgrades button:disabled{
+    background-color: #204f99;
+    color: black;
+}
+
+#earthUpgrades button:disabled{
+    background-color: #735114;
+    color: black;
+}

@@ -13,8 +13,8 @@ function UpgradesTab(props) {
             <div className="fireUpgradesRow">
               <button disabled={props.getUpgradeCount("fireUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C1")} >
                   <h3>Explosiveness</h3>
-                  <p>Divide Cost of Fire Generator by its Count + 1</p>
-                  <h5>Current: /{props.getValue("fireGeneratorAmount") + 1}</h5>
+                  <p>Increase output of fire generators by 250%</p>
+                  <h5> &nbsp;</h5>
                   <h4>Cost: {props.getUpgradeCost("fireUpgradeR1C1")[0]} {props.getUpgradeCost("fireUpgradeR1C1")[1]}</h4>
 
               </button>
@@ -22,7 +22,7 @@ function UpgradesTab(props) {
               <button disabled={props.getUpgradeCount("fireUpgradeR1C2") == 1} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C2")} >
                   <h3>Ignition Burst</h3>
                   <p>Multiplier that falls based on time in current reset</p>
-                  <h5>Current: {props.formatValues(1 + (100000 / props.getValue("timeSinceLastRebirth")))}x</h5>
+                  <h5>Current: {props.formatValues(1 + (50000 / (props.getValue("timeSinceLastRebirth")/1000)))}x</h5>
                   <h4>Cost: {props.getUpgradeCost("fireUpgradeR1C2")[0]} {props.getUpgradeCost("fireUpgradeR1C2")[1]}</h4>
                   
               </button>
@@ -125,7 +125,7 @@ function UpgradesTab(props) {
 
               <button disabled={props.getUpgradeCount("waterUpgradeR2C3") == 3} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR2C3") && props.setValue("waterGeneratorMult", props.getValue("waterGeneratorMult") * 3)} >
                     <h3>Primoridal Flood</h3>
-                    <p>Multiply Effective Generator count by 3</p>
+                    <p>Multiply Effective Water Generator count by 3</p>
                     <h5>Current: {3 ** props.getUpgradeCount("waterUpgradeR2C3")}x</h5>
                     <h4>Cost: {props.getUpgradeCost("waterUpgradeR2C3")[0]} {props.getUpgradeCost("waterUpgradeR2C3")[1]}</h4>
 
@@ -150,21 +150,23 @@ function UpgradesTab(props) {
             <h4>You have {props.formatValues(props.getValue("earth"))} Earth</h4>
 
             <div className="earthUpgradesRow">
-              <button disabled={props.getUpgradeCount("earthUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C1")} >
-                  <h3>Nutrient Rich</h3>
-                  <p>Divide Cost of Earth Generator by its Water Generator Count + 1</p>
-                  <h5>Current: /{props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult") + 1}</h5>
-                  <h4>Cost: {props.getUpgradeCost("earthUpgradeR1C1")[0]} {props.getUpgradeCost("earthUpgradeR1C1")[1]}</h4>
+            <button disabled={props.getUpgradeCount("earthUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C1")} >
+                    <h3>Hearth Home</h3>
+                    <p>Increase production based on total generator count</p>
+                    <h5>Current: {1 + props.getValue("fireGeneratorAmount") + props.getValue("earthGeneratorAmount") + props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult")}x</h5>
+                    <h4>Cost: {props.getUpgradeCost("earthUpgradeR1C1")[0]} {props.getUpgradeCost("earthUpgradeR1C1")[1]}</h4>
 
               </button>
 
               <button disabled={props.getUpgradeCount("earthUpgradeR1C2") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C2")} >
-                  <h3>Stable Growth</h3>
-                  <p>Gain a multiplier that grows with gametime</p>
-                  <h5>Current: {props.formatValues(1.1 ** Math.log(props.getValue("timeSinceStartOfGame")))}x</h5>
+                  <h3>Nutrient Rich</h3>
+                  <p>Divide Cost of Earth Generator by Water Generator Count + 1</p>
+                  <h5>Current: /{props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult") + 1}</h5>
                   <h4>Cost: {props.getUpgradeCost("earthUpgradeR1C2")[0]} {props.getUpgradeCost("earthUpgradeR1C2")[1]}</h4>
-                  
+
               </button>
+              
+
 
               <button disabled={props.getUpgradeCount("earthUpgradeR1C3") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C3")} >
                   <h3>Geomagnetic</h3>
@@ -176,12 +178,12 @@ function UpgradesTab(props) {
             </div>
 
             <div className="earthUpgradesRow">
-              <button disabled={props.getUpgradeCount("earthUpgradeR2C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR2C1")} >
-                    <h3>Hearth Home</h3>
-                    <p>Increase production based on total generator count</p>
-                    <h5>Current: {1 + props.getValue("fireGeneratorAmount") + props.getValue("earthGeneratorAmount") + props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult")}x</h5>
-                    <h4>Cost: {props.getUpgradeCost("earthUpgradeR2C1")[0]} {props.getUpgradeCost("earthUpgradeR2C1")[1]}</h4>
-
+            <button disabled={props.getUpgradeCount("earthUpgradeR2C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR2C1")} >
+                  <h3>Stable Growth</h3>
+                  <p>Gain a multiplier that grows with gametime</p>
+                  <h5>Current: {props.formatValues(1.1 ** Math.log(props.getValue("timeSinceStartOfGame")))}x</h5>
+                  <h4>Cost: {props.getUpgradeCost("earthUpgradeR2C1")[0]} {props.getUpgradeCost("earthUpgradeR2C1")[1]}</h4>
+                  
               </button>
 
               <button disabled={props.getUpgradeCount("earthUpgradeR2C2") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR2C2") } >

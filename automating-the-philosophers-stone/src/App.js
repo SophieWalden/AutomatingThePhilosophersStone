@@ -10,17 +10,26 @@ function App() {
   // Energy
   let [energy, setEnergy] = useState(1);
   let [spentEnergy, setSpentEnergy] = useState(0);
-  
+
+  // Philosophy Mult
+  let [sacrificedTotal, setSacrificedTotal] = useState(0);
+  let [energyMult, setEnergyMult] = useState(1);
 
   // Elements
   let [fire, setFire] = useState(0);
   let [water, setWater] = useState(0);
   let [earth, setEarth] = useState(0);
+  let [air, setAir] = useState(0);
+  let [space, setSpace] = useState(0);
+  let [aether, setAether] = useState(0);
 
   // Count of each generator
   let [fireGeneratorAmount, setFireGeneratorAmount] = useState(0);
   let [waterGeneratorAmount, setWaterGeneratorAmount] = useState(0);
   let [earthGeneratorAmount, setEarthGeneratorAmount] = useState(0);
+  let [airGeneratorAmount, setAirGeneratorAmount] = useState(0);
+  let [spaceGeneratorAmount, setSpaceGeneratorAmount] = useState(0);
+  let [aetherGeneratorAmount, setAetherGeneratorAmount] = useState(0);
 
   // Flameburst (Fire Upgrades R2C1-3)
   let [flameburstMult, setFlameburstMult] = useState(10);
@@ -39,6 +48,11 @@ function App() {
 
   let [startOfGame, setStartOfGame] = useState(Date.now())
   let [timeSinceStartOfGame, setTimeSinceStartOfGame] = useState(0);
+
+  // Tracking max values
+  let [maxWater, setMaxWater] = useState(0);
+  let [maxEarth, setMaxEarth] = useState(0);
+  let [maxFire, setMaxFire] = useState(0);
   
   function formatValues(value){
     let roundingPlaces = 2;
@@ -47,23 +61,20 @@ function App() {
     return value
   }
 
+  let valueGetters = {"air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy - spentEnergy, "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  
   function getValue(name){
-    let values = {"timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy - spentEnergy, "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
-    
-    return values[name];
+    return valueGetters[name];
   }
 
-  function setValue(name, value){
-    let functions = {"timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy, "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
-    console.log(name, value, functions[name]);
-    functions[name](value);
+  function setValue(name, value){
+    valueSetters[name](value);
   }
 
   function addValue(name, value){
-    let functions = {"timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
-
-    functions[name](currentVal => currentVal + value);
+    valueSetters[name](currentVal => currentVal + value);
   }
 
 
@@ -158,11 +169,13 @@ function App() {
   function calculateNewEnergy(){
     let energyValue = 1;
 
-    energyValue += Math.floor(Math.log10(fire+1)); 
+    energyValue += Math.floor(Math.log10(maxFire+1)); 
 
-    energyValue += Math.floor(Math.log(water + 1) / Math.log(4));
+    energyValue += Math.floor(Math.log(maxWater + 1) / Math.log(4));
 
-    energyValue += Math.floor(Math.log(earth + 1) / Math.log(2));
+    energyValue += Math.floor(Math.log(maxEarth + 1) / Math.log(2));
+
+    energyValue = Math.floor(energyValue * energyMult)
 
     if (energyValue > energy){
       setEnergy(energyValue);
@@ -175,15 +188,30 @@ function App() {
     setTimeSinceStartOfGame(Date.now() - startOfGame);
   }
 
+  function updateMaxValues(){
+    if (getValue("fire") > maxFire){
+      setMaxFire(getValue("fire"));
+    }
+
+    if (getValue("water") > maxWater){
+      setMaxWater(getValue("water"));
+    }
+
+    if (getValue("earth") > maxEarth){
+      setMaxEarth(getValue("earth"));
+    }
+  }
+
   // Call update every 33 ms (update time)
   React.useEffect(() => {
     const interval = setInterval(() => {
         calculateNewEnergy();
         calculateTimeSinceLastReset();
+        updateMaxValues();
     }, 33);
     
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-}, [energy, fire, water, earth])
+}, [energy, fire, water, earth, lastResetTime])
 
   
   return (
