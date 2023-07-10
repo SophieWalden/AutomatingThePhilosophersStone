@@ -4,18 +4,27 @@
     border: solid red 2px;
 }
 
+.TabContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 
 #tabList{
     height: 7vh;
+    width: 70vw;
+
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 
 #tabs{
     
     margin-top: 2vh;
     height: 78vh;
+    width: 100%;
 
 }
 
@@ -24,8 +33,11 @@
     height: 100%;
     font-size: 1.25vw;
     font-weight: bold;
-    background-color: transparent;
+    background-color: rgba(255,255,255,0.1);
     border: solid 2px rgb(161, 139, 139);
+    border-radius: 15px;
+    
+
 }
 
 #tabList button:hover{
