@@ -1,6 +1,9 @@
 
 
-
+.UpgradesContainer{
+    display: flex;
+    justify-content: space-evenly;
+}
 
 .UpgradesContainer button{
     width: 10vw;
@@ -9,12 +12,15 @@
 
 .UpgradesContainer button h3{
     font-size: 1vw;
+    height: 2vh;
 }
 
 .UpgradesContainer button h4{
     font-size: 0.7vw;
+    height: 1vh;
 }
 
 .UpgradesContainer button p{
     font-size: 0.75vw;
+    height: 4vh;
 }

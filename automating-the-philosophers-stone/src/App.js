@@ -8,7 +8,7 @@ import TabManager from "./components/TabManager.js"
 function App() {
 
   // Energy
-  let [energy, setEnergy] = useState(100);
+  let [energy, setEnergy] = useState(1);
   let [spentEnergy, setSpentEnergy] = useState(0);
   
 
@@ -17,9 +17,28 @@ function App() {
   let [water, setWater] = useState(0);
   let [earth, setEarth] = useState(0);
 
+  // Count of each generator
+  let [fireGeneratorAmount, setFireGeneratorAmount] = useState(0);
+  let [waterGeneratorAmount, setWaterGeneratorAmount] = useState(0);
+  let [earthGeneratorAmount, setEarthGeneratorAmount] = useState(0);
+
+  // Flameburst (Fire Upgrades R2C1-3)
+  let [flameburstMult, setFlameburstMult] = useState(10);
+  let [flameburstChance, setFlameburstChance] = useState(0.1);
+  let [flameburstLength, setFlameburstLength] = useState(0);
+
+  // Condensor (WaterUpgrade R1C2)
+  let [waterProductionMult, setWaterProductionMult] = useState(1);
+
+  // Effective Generator Multiplier (Water Upgrade R2C3)
+  let [waterGeneratorMult, setWaterGeneratorMult] = useState(1);
+
   // Extra Tracking
   let [lastResetTime, setLastResetTime] = useState(Date.now());
   let [timeSinceLastReset, setTimeSinceLastReset] = useState(0);
+
+  let [startOfGame, setStartOfGame] = useState(Date.now())
+  let [timeSinceStartOfGame, setTimeSinceStartOfGame] = useState(0);
   
   function formatValues(value){
     let roundingPlaces = 2;
@@ -29,19 +48,20 @@ function App() {
   }
 
   function getValue(name){
-    let values = {"energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy - spentEnergy, "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+    let values = {"timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy - spentEnergy, "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
     
     return values[name];
   }
 
   function setValue(name, value){
-    let functions = {"energy": setEnergy, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+    let functions = {"timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy, "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
+    console.log(name, value, functions[name]);
     functions[name](value);
   }
 
   function addValue(name, value){
-    let functions = {"energy": setEnergy, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+    let functions = {"timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
     functions[name](currentVal => currentVal + value);
   }
@@ -55,13 +75,40 @@ function App() {
   let [fireUpgradeR2C1, setFireUpgradeR2C1] = React.useState(0);
   let [fireUpgradeR2C2, setFireUpgradeR2C2] = React.useState(0);
   let [fireUpgradeR2C3, setFireUpgradeR2C3] = React.useState(0);
+  let [waterRepeatable, setWaterRepeatable] = React.useState(0);
+  let [waterUpgradeR1C1, setWaterUpgradeR1C1] = React.useState(0);
+  let [waterUpgradeR1C2, setWaterUpgradeR1C2] = React.useState(0);
+  let [waterUpgradeR1C3, setWaterUpgradeR1C3] = React.useState(0);
+  let [waterUpgradeR2C1, setWaterUpgradeR2C1] = React.useState(0);
+  let [waterUpgradeR2C2, setWaterUpgradeR2C2] = React.useState(0);
+  let [waterUpgradeR2C3, setWaterUpgradeR2C3] = React.useState(0);
+  let [earthRepeatable, setEarthRepeatable] = React.useState(0);
+  let [earthUpgradeR1C1, setEarthUpgradeR1C1] = React.useState(0);
+  let [earthUpgradeR1C2, setEarthUpgradeR1C2] = React.useState(0);
+  let [earthUpgradeR1C3, setEarthUpgradeR1C3] = React.useState(0);
+  let [earthUpgradeR2C1, setEarthUpgradeR2C1] = React.useState(0);
+  let [earthUpgradeR2C2, setEarthUpgradeR2C2] = React.useState(0);
+  let [earthUpgradeR2C3, setEarthUpgradeR2C3] = React.useState(0);
+  
   let setters = {"fireRepeatable": setFireRepeatable, "fireUpgradeR1C1": setFireUpgradeR1C1, "fireUpgradeR1C2": setFireUpgradeR1C2,
                  "fireUpgradeR1C3": setFireUpgradeR1C3, "fireUpgradeR2C1": setFireUpgradeR2C1, "fireUpgradeR2C2": setFireUpgradeR2C2,
-                 "fireUpgradeR2C3": setFireUpgradeR2C3}
+                 "fireUpgradeR2C3": setFireUpgradeR2C3,
+                 "waterRepeatable": setWaterRepeatable, "waterUpgradeR1C1": setWaterUpgradeR1C1, "waterUpgradeR1C2": setWaterUpgradeR1C2,
+                 "waterUpgradeR1C3": setWaterUpgradeR1C3, "waterUpgradeR2C1": setWaterUpgradeR2C1, "waterUpgradeR2C2": setWaterUpgradeR2C2,
+                 "waterUpgradeR2C3": setWaterUpgradeR2C3,
+                 "earthRepeatable": setEarthRepeatable, "earthUpgradeR1C1": setEarthUpgradeR1C1, "earthUpgradeR1C2": setEarthUpgradeR1C2,
+                 "earthUpgradeR1C3": setEarthUpgradeR1C3, "earthUpgradeR2C1": setEarthUpgradeR2C1, "earthUpgradeR2C2": setEarthUpgradeR2C2,
+                 "earthUpgradeR2C3": setEarthUpgradeR2C3}
 
   let getters = {"fireRepeatable": fireRepeatable, "fireUpgradeR1C1": fireUpgradeR1C1, "fireUpgradeR1C2": fireUpgradeR1C2,
                  "fireUpgradeR1C3": fireUpgradeR1C3, "fireUpgradeR2C1": fireUpgradeR2C1, "fireUpgradeR2C2": fireUpgradeR2C2,
-                 "fireUpgradeR2C3": fireUpgradeR2C3}
+                 "fireUpgradeR2C3": fireUpgradeR2C3,
+                 "waterRepeatable": waterRepeatable, "waterUpgradeR1C1": waterUpgradeR1C1, "waterUpgradeR1C2": waterUpgradeR1C2,
+                 "waterUpgradeR1C3": waterUpgradeR1C3, "waterUpgradeR2C1": waterUpgradeR2C1, "waterUpgradeR2C2": waterUpgradeR2C2,
+                 "waterUpgradeR2C3": waterUpgradeR2C3, 
+                 "earthRepeatable": earthRepeatable, "earthUpgradeR1C1": earthUpgradeR1C1, "earthUpgradeR1C2": earthUpgradeR1C2,
+                 "earthUpgradeR1C3": earthUpgradeR1C3, "earthUpgradeR2C1": earthUpgradeR2C1, "earthUpgradeR2C2": earthUpgradeR2C2,
+                 "earthUpgradeR2C3": earthUpgradeR2C3}
 
   function buyUpgrade(upgrade){
     let [cost, element] = getUpgradeCost(upgrade);
@@ -76,7 +123,10 @@ function App() {
       }
       
       setters[upgrade](value => value + 1)
+      return true;
     }
+
+    return false;
   }
 
   function getUpgradeCount(upgrade){
@@ -86,9 +136,21 @@ function App() {
   function getUpgradeCost(upgrade){
     let costs = {"fireRepeatable": [5 * 5 ** getUpgradeCount("fireRepeatable"), "fire"],
                  "fireUpgradeR1C1": [2, "energy"],"fireUpgradeR1C2": [5, "energy"],"fireUpgradeR1C3": [15, "energy"],
-                 "fireUpgradeR2C1": [10, "energy"], "fireUpgradeR2C2": [15, "energy"], "fireUpgradeR2C3": [25, "energy"]}
+                 "fireUpgradeR2C1": [10 * 2 ** getUpgradeCount("fireUpgradeR2C1"), "energy"], "fireUpgradeR2C2": [Math.ceil(15 * 1.5 ** getUpgradeCount("fireUpgradeR2C2")), "energy"], "fireUpgradeR2C3": [25, "energy"],
+                 "waterRepeatable": [5 * 5 ** getUpgradeCount("waterRepeatable"), "water"],
+                 "waterUpgradeR1C1": [5, "energy"],"waterUpgradeR1C2": [10, "energy"],"waterUpgradeR1C3": [25, "energy"],
+                 "waterUpgradeR2C1": [15, "energy"], "waterUpgradeR2C2": [20, "energy"], "waterUpgradeR2C3": [40, "energy"],
+                 "earthRepeatable": [5 * 5 ** getUpgradeCount("earthRepeatable"), "earth"],
+                 "earthUpgradeR1C1": [5, "energy"],"earthUpgradeR1C2": [10, "energy"],"earthUpgradeR1C3": [25, "energy"],
+                 "earthUpgradeR2C1": [15, "energy"], "earthUpgradeR2C2": [20, "energy"], "earthUpgradeR2C3": [40, "energy"]}
 
     return costs[upgrade]
+  }
+
+  function resetAllUpgrades(){
+    for (const upgrade in setters){
+      setters[upgrade](0);
+    }
   }
 
 
@@ -110,6 +172,7 @@ function App() {
 
   function calculateTimeSinceLastReset(){
     setTimeSinceLastReset(Date.now() - lastResetTime);
+    setTimeSinceStartOfGame(Date.now() - startOfGame);
   }
 
   // Call update every 33 ms (update time)
@@ -129,7 +192,7 @@ function App() {
       <h2 className="ResourceDisplay">You have <span id="pink">{energy}</span> Energy</h2>
       <h2 className="ResourceDisplay">You have spent <span id="pink">{spentEnergy}</span> of your Energy</h2>
 
-      <TabManager getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
+      <TabManager resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
     </div>
   );
 }
