@@ -1,8 +1,8 @@
 {
   "name": "automating-the-philosophers-stone",
   "version": "0.1.0",
-  "private": true,
-  "homepage": "https://sophiewalden.github.io/AutomatingThePhilosophersStone/",
+  "private": false,
+  "homepage": "https://sophiewalden.github.io/AutomatingThePhilosophersStone",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
