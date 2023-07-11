@@ -3,65 +3,77 @@ import './App.css';
 import React, {useState, useEffect} from "react";
 
 import TabManager from "./components/TabManager.js"
-
+import Decimal from "break_infinity.js";
 
 function App() {
 
   // Energy
-  let [energy, setEnergy] = useState(1);
-  let [spentEnergy, setSpentEnergy] = useState(0);
+  let [energy, setEnergy] = useState(new Decimal(1));
+  let [spentEnergy, setSpentEnergy] = useState(new Decimal(0));
 
   // Philosophy Mult
-  let [sacrificedTotal, setSacrificedTotal] = useState(0);
-  let [energyMult, setEnergyMult] = useState(1);
+  let [sacrificedTotal, setSacrificedTotal] = useState(new Decimal(0));
+  let [energyMult, setEnergyMult] = useState(new Decimal(1));
 
   // Elements
-  let [fire, setFire] = useState(0);
-  let [water, setWater] = useState(0);
-  let [earth, setEarth] = useState(0);
-  let [air, setAir] = useState(0);
-  let [space, setSpace] = useState(0);
-  let [aether, setAether] = useState(0);
+  let [fire, setFire] = useState((new Decimal(0)));
+  let [water, setWater] = useState(new Decimal(0));
+  let [earth, setEarth] = useState(new Decimal(0));
+  let [air, setAir] = useState(new Decimal(0));
+  let [space, setSpace] = useState(new Decimal(0));
+  let [aether, setAether] = useState(new Decimal(0));
 
   // Count of each generator
-  let [fireGeneratorAmount, setFireGeneratorAmount] = useState(0);
-  let [waterGeneratorAmount, setWaterGeneratorAmount] = useState(0);
-  let [earthGeneratorAmount, setEarthGeneratorAmount] = useState(0);
-  let [airGeneratorAmount, setAirGeneratorAmount] = useState(0);
-  let [spaceGeneratorAmount, setSpaceGeneratorAmount] = useState(0);
-  let [aetherGeneratorAmount, setAetherGeneratorAmount] = useState(0);
+  let [fireGeneratorAmount, setFireGeneratorAmount] = useState(new Decimal(0));
+  let [waterGeneratorAmount, setWaterGeneratorAmount] = useState(new Decimal(0));
+  let [earthGeneratorAmount, setEarthGeneratorAmount] = useState(new Decimal(0));
+  let [airGeneratorAmount, setAirGeneratorAmount] = useState(new Decimal(0));
+  let [spaceGeneratorAmount, setSpaceGeneratorAmount] = useState(new Decimal(0));
+  let [aetherGeneratorAmount, setAetherGeneratorAmount] = useState(new Decimal(0));
 
   // Flameburst (Fire Upgrades R2C1-3)
-  let [flameburstMult, setFlameburstMult] = useState(10);
-  let [flameburstChance, setFlameburstChance] = useState(0.1);
-  let [flameburstLength, setFlameburstLength] = useState(0);
+  let [flameburstMult, setFlameburstMult] = useState(new Decimal(10));
+  let [flameburstChance, setFlameburstChance] = useState(new Decimal(0.1));
+  let [flameburstLength, setFlameburstLength] = useState(new Decimal(0));
 
   // Condensor (WaterUpgrade R1C2)
-  let [waterProductionMult, setWaterProductionMult] = useState(1);
+  let [waterProductionMult, setWaterProductionMult] = useState(new Decimal(1));
 
   // Effective Generator Multiplier (Water Upgrade R2C3)
-  let [waterGeneratorMult, setWaterGeneratorMult] = useState(1);
+  let [waterGeneratorMult, setWaterGeneratorMult] = useState(new Decimal(1));
 
   // Extra Tracking
-  let [lastResetTime, setLastResetTime] = useState(Date.now());
-  let [timeSinceLastReset, setTimeSinceLastReset] = useState(0);
+  let [lastResetTime, setLastResetTime] = useState(new Decimal(Date.now()));
+  let [timeSinceLastReset, setTimeSinceLastReset] = useState(new Decimal(0));
 
-  let [startOfGame, setStartOfGame] = useState(Date.now())
-  let [timeSinceStartOfGame, setTimeSinceStartOfGame] = useState(0);
+  let [startOfGame, setStartOfGame] = useState(new Decimal(Date.now()))
+  let [timeSinceStartOfGame, setTimeSinceStartOfGame] = useState(new Decimal(0));
 
   // Tracking max values
-  let [maxWater, setMaxWater] = useState(0);
-  let [maxEarth, setMaxEarth] = useState(0);
-  let [maxFire, setMaxFire] = useState(0);
+  let [maxWater, setMaxWater] = useState(new Decimal(0));
+  let [maxEarth, setMaxEarth] = useState(new Decimal(0));
+  let [maxFire, setMaxFire] = useState(new Decimal(0));
   
-  function formatValues(value){
-    let roundingPlaces = 2;
-    value = Math.round(10**roundingPlaces * value) / 10**roundingPlaces; // Round to roundingPlaces demical place
 
-    return value
+  function formatValues(value){
+
+    if (new Decimal(1000).greaterThan(value)){
+      // Return small decimal number
+      
+      value = value.times(100).floor().divideBy(100).toString()
+      if (value.indexOf(".") == -1) return value
+      
+      value = value.substring(0, value.indexOf(".") + 3)
+      let paddingNeeded = 3 - (value.length - value.indexOf("."));
+
+      return value + "0".repeat(paddingNeeded);
+      
+    } 
+
+    return value.toExponential(2).toString().replace("+","");
   }
 
-  let valueGetters = {"air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy - spentEnergy, "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  let valueGetters = {"air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
   
   function getValue(name){
     return valueGetters[name];
@@ -74,7 +86,7 @@ function App() {
   }
 
   function addValue(name, value){
-    valueSetters[name](currentVal => currentVal + value);
+    valueSetters[name](currentVal => currentVal.plus(value));
   }
 
 
@@ -125,10 +137,10 @@ function App() {
     let [cost, element] = getUpgradeCost(upgrade);
 
     let elementAmount = element == "energy" ? getValue("energyLeft") : getValue(element)
-    if (elementAmount >= cost){
+    if (elementAmount.greaterThan(cost)){
 
       if (element != "energy"){
-        addValue(element, -cost);
+        addValue(element, cost.times(-1));
       }else{
         addValue("spentEnergy", cost);
       }
@@ -145,15 +157,15 @@ function App() {
   }
 
   function getUpgradeCost(upgrade){
-    let costs = {"fireRepeatable": [5 * 5 ** getUpgradeCount("fireRepeatable"), "fire"],
-                 "fireUpgradeR1C1": [2, "energy"],"fireUpgradeR1C2": [5, "energy"],"fireUpgradeR1C3": [15, "energy"],
-                 "fireUpgradeR2C1": [10 * 2 ** getUpgradeCount("fireUpgradeR2C1"), "energy"], "fireUpgradeR2C2": [Math.ceil(15 * 1.5 ** getUpgradeCount("fireUpgradeR2C2")), "energy"], "fireUpgradeR2C3": [25, "energy"],
-                 "waterRepeatable": [5 * 5 ** getUpgradeCount("waterRepeatable"), "water"],
-                 "waterUpgradeR1C1": [5, "energy"],"waterUpgradeR1C2": [10, "energy"],"waterUpgradeR1C3": [25, "energy"],
-                 "waterUpgradeR2C1": [15, "energy"], "waterUpgradeR2C2": [20, "energy"], "waterUpgradeR2C3": [40, "energy"],
-                 "earthRepeatable": [5 * 5 ** getUpgradeCount("earthRepeatable"), "earth"],
-                 "earthUpgradeR1C1": [5, "energy"],"earthUpgradeR1C2": [10, "energy"],"earthUpgradeR1C3": [25, "energy"],
-                 "earthUpgradeR2C1": [15, "energy"], "earthUpgradeR2C2": [20, "energy"], "earthUpgradeR2C3": [40, "energy"]}
+    let costs = {"fireRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("fireRepeatable"))), "fire"],
+                 "fireUpgradeR1C1": [new Decimal(2), "energy"],"fireUpgradeR1C2": [new Decimal(5), "energy"],"fireUpgradeR1C3": [new Decimal(15), "energy"],
+                 "fireUpgradeR2C1": [new Decimal(10).times(new Decimal(2).pow( getUpgradeCount("fireUpgradeR2C1"))), "energy"], "fireUpgradeR2C2": [(new Decimal(15).times(new Decimal(1.5).pow(getUpgradeCount("fireUpgradeR2C2")))).ceil(), "energy"], "fireUpgradeR2C3": [new Decimal(25), "energy"],
+                 "waterRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("waterRepeatable"))), "water"],
+                 "waterUpgradeR1C1": [new Decimal(5), "energy"],"waterUpgradeR1C2": [new Decimal(10), "energy"],"waterUpgradeR1C3": [new Decimal(25), "energy"],
+                 "waterUpgradeR2C1": [new Decimal(15), "energy"], "waterUpgradeR2C2": [new Decimal(20), "energy"], "waterUpgradeR2C3": [new Decimal(40), "energy"],
+                 "earthRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("earthRepeatable"))), "earth"],
+                 "earthUpgradeR1C1": [new Decimal(5), "energy"],"earthUpgradeR1C2": [new Decimal(10), "energy"],"earthUpgradeR1C3": [new Decimal(25), "energy"],
+                 "earthUpgradeR2C1": [new Decimal(15), "energy"], "earthUpgradeR2C2": [new Decimal(20), "energy"], "earthUpgradeR2C3": [new Decimal(40), "energy"]}
 
     return costs[upgrade]
   }
@@ -167,37 +179,37 @@ function App() {
 
 
   function calculateNewEnergy(){
-    let energyValue = 1;
+    let energyValue = new Decimal(1);
 
-    energyValue += Math.floor(Math.log10(maxFire+1)); 
+    energyValue = energyValue.plus(new Decimal(maxFire.plus(1).log(10)).floor()); 
 
-    energyValue += Math.floor(Math.log(maxWater + 1) / Math.log(4));
+    energyValue = energyValue.plus(new Decimal(maxWater.plus(1).log(4)).floor()); 
 
-    energyValue += Math.floor(Math.log(maxEarth + 1) / Math.log(2));
+    energyValue = energyValue.plus(new Decimal(maxEarth.plus(1).log(2)).floor()); 
 
-    energyValue = Math.floor(energyValue * energyMult)
+    energyValue = energyValue.times(energyMult).floor()
 
-    if (energyValue > energy){
+    if (energyValue.greaterThan(energy)){
       setEnergy(energyValue);
     }
 
   }
 
   function calculateTimeSinceLastReset(){
-    setTimeSinceLastReset(Date.now() - lastResetTime);
-    setTimeSinceStartOfGame(Date.now() - startOfGame);
+    setTimeSinceLastReset(new Decimal(Date.now() - lastResetTime));
+    setTimeSinceStartOfGame(new Decimal(Date.now() - startOfGame));
   }
 
   function updateMaxValues(){
-    if (getValue("fire") > maxFire){
+    if (getValue("fire").greaterThan(maxFire)){
       setMaxFire(getValue("fire"));
     }
 
-    if (getValue("water") > maxWater){
+    if (getValue("water").greaterThan(maxWater)){
       setMaxWater(getValue("water"));
     }
 
-    if (getValue("earth") > maxEarth){
+    if (getValue("earth").greaterThan(maxEarth)){
       setMaxEarth(getValue("earth"));
     }
   }
@@ -217,8 +229,8 @@ function App() {
   return (
     <div className="App">
 
-      <h2 className="ResourceDisplay">You have <span id="pink">{energy}</span> Energy</h2>
-      <h2 className="ResourceDisplay">You have spent <span id="pink">{spentEnergy}</span> of your Energy</h2>
+      <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy)}</span> Energy</h2>
+      <h2 className="ResourceDisplay">You have spent <span id="pink">{formatValues(spentEnergy)}</span> of your Energy</h2>
 
       <TabManager resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
     </div>

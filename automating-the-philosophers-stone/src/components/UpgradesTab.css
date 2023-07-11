@@ -30,14 +30,27 @@
     border: #53354A solid 2px;
 }
 
+#fireUpgrades button:hover{
+    background-color: #813b49;
+}
+
 #waterUpgrades button{
     background-color: #326ecd;
     border: #53354A solid 2px;
 }
 
+#waterUpgrades button:hover{
+    background-color: #3660a3;
+}
+
+
 #earthUpgrades button{
     background-color: #9E7323;
     border: #53354A solid 2px;
+}
+
+#earthUpgrades button:hover{
+    background-color: #81622b;
 }
 
 #fireUpgrades button:disabled{

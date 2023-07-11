@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "break_infinity.js": "^2.2.0",
     "gh-pages": "^5.0.0",
     "react-spring": "^9.7.2"
   }

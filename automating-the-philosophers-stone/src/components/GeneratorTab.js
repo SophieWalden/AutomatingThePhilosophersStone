@@ -1,18 +1,22 @@
 import './GeneratorTab.css';
 import React, {useState} from "react";
+import Decimal from "break_infinity.js";
 
 function GeneratorTab(props) {
 
     let flameburstQueue = [];
 
     function getCost(element){
-        let costs = {"fire": Math.floor(2 ** props.getValue("fireGeneratorAmount")),
-                     "water": Math.floor(2.5 * 2.1 ** props.getValue("waterGeneratorAmount")),
-                     "earth": Math.floor(10 * 2.5 ** props.getValue("earthGeneratorAmount"))
+        let costs = {"fire": new Decimal(new Decimal(2).pow(props.getValue("fireGeneratorAmount"))).floor(),
+                     "water": new Decimal(2.5).times(new Decimal(2.1).pow(props.getValue("waterGeneratorAmount"))).floor(),
+                     "earth": new Decimal(10).times(new Decimal(2.5).pow(props.getValue("earthGeneratorAmount"))).floor(),
+                     "air": new Decimal(25).times(new Decimal(3.5).pow(props.getValue("airGeneratorAmount"))).floor(),
+                     "space": new Decimal(50).times(new Decimal(5).pow(props.getValue("spaceGeneratorAmount"))).floor(),
+                     "aether": new Decimal(75).times(new Decimal(10).pow(props.getValue("spaceGeneratorAmount"))).floor()
                     }
 
         if (props.getUpgradeCount("earthUpgradeR1C2") == 1){
-            costs["earth"] = props.formatValues(costs["earth"] / (props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult") + 1))
+            costs["earth"] = costs["earth"].dividedBy((props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult")).plus(1))).floor()
         }
 
 
@@ -21,13 +25,15 @@ function GeneratorTab(props) {
 
 
     function createGenerator(element, amount){
-        let generatorNames = {"fire": "fireGeneratorAmount", "water": "waterGeneratorAmount", "earth": "earthGeneratorAmount"}
+        let generatorNames = {"fire": "fireGeneratorAmount", "water": "waterGeneratorAmount", "earth": "earthGeneratorAmount",
+                              "air": "airGeneratorAmount", "space": "spaceGeneratorAmount", "aether": "aetherGeneratorAmount"}
 
         props.addValue(generatorNames[element], amount)
     }
 
     function getGeneratorAmount(element){
-        let generators = {"fire": props.getValue("fireGeneratorAmount"), "water": props.getValue("waterGeneratorAmount"),"earth": props.getValue("earthGeneratorAmount")}
+        let generators = {"fire": props.getValue("fireGeneratorAmount"), "water": props.getValue("waterGeneratorAmount"),"earth": props.getValue("earthGeneratorAmount"),
+                            "air": props.getValue("airGeneratorAmount"), "space": props.getValue("spaceGeneratorAmount"), "aether": props.getValue("aetherGeneratorAmount")}
 
         return generators[element];
     }
@@ -36,14 +42,14 @@ function GeneratorTab(props) {
     let generatorAmount = getGeneratorAmount(element);
 
     // Buy With Energy
-    if (generatorAmount === 0){
+    if (generatorAmount.equals(0)){
         if (canYouBuyGenerator(element)){
             props.addValue("spentEnergy", getCost(element))
             createGenerator(element, 1);
         }
     }else{ // Buy with the specific currency
         if (canYouBuyGenerator(element)){
-            props.addValue(element, -getCost(element));
+            props.addValue(element, getCost(element).times(new Decimal(-1)));
             createGenerator(element, 1);
         }   
     }
@@ -53,11 +59,11 @@ function GeneratorTab(props) {
     let generatorAmount = getGeneratorAmount(element);
 
     // Buy With Energy
-    if (generatorAmount === 0){
+    if (generatorAmount.equals(0)){
         let cost = getCost(element);
-        let energyAmount = props.getValue("energy") - props.getValue("spentEnergy")
+        let energyAmount = props.getValue("energy").minus(props.getValue("spentEnergy"))
         
-        if (energyAmount >= cost){
+        if (energyAmount.greaterThanOrEqualTo(cost)){
             return true
         }
 
@@ -66,7 +72,7 @@ function GeneratorTab(props) {
         let currentAmount = props.getValue(element);
         let cost = getCost(element)
 
-        if (currentAmount >= cost){
+        if (currentAmount.greaterThanOrEqualTo(cost)){
             return true;
         }   
     }
@@ -76,25 +82,25 @@ function GeneratorTab(props) {
 
   function update(){
     // Everything that needs to be called routinely
-    let deltaTime = 33/1000;
+    let deltaTime = new Decimal(33).dividedBy(1000);
 
     // Update Generators
      
-    let earthR2C3prod = [10 ** props.getUpgradeCount("earthUpgradeR2C3"), undefined];
+    let earthR2C3prod = [new Decimal(10).pow(props.getUpgradeCount("earthUpgradeR2C3")), undefined];
     if (props.getUpgradeCount("earthUpgradeR2C3") >= 1){
-        let fireValue = Math.floor(Math.log10(props.getValue("fire")+1)); 
-        let waterValue = Math.floor(Math.log(props.getValue("water") + 1) / Math.log(4));
-        let earthValue = Math.floor(Math.log(props.getValue("earth") + 1) / Math.log(2));
+        let fireValue = new Decimal(props.getValue("fire").plus(1).log(10)).floor(); 
+        let waterValue = new Decimal(props.getValue("water").plus(1).log(4)).floor(); 
+        let earthValue = new Decimal(props.getValue("earth").plus(1).log(2)).floor()
         
-        if (fireValue >= waterValue && fireValue >= earthValue){
+        if (fireValue.greaterThanOrEqualTo(waterValue) && fireValue.greaterThanOrEqualTo(earthValue)){
             earthR2C3prod[1] = "fire"
         }
 
-        if (waterValue >= earthValue && waterValue >= fireValue){
+        if (waterValue.greaterThanOrEqualTo(earthValue) && waterValue.greaterThanOrEqualTo(fireValue)){
             earthR2C3prod[1] = "water";
         }
 
-        if (earthValue >= waterValue && earthValue >= fireValue){
+        if (earthValue.greaterThanOrEqualTo(waterValue) && earthValue.greaterThanOrEqualTo(fireValue)){
             earthR2C3prod[1] = "earth";
         }
         
@@ -102,50 +108,50 @@ function GeneratorTab(props) {
     
 
     // Earth
-    let newEarth = getGeneratorAmount("earth") * deltaTime
+    let newEarth = getGeneratorAmount("earth").times(deltaTime)
 
     if (props.getUpgradeCount("earthUpgradeR2C1") == 1){
-        newEarth *= 1.1 ** Math.log(props.getValue("timeSinceStartOfGame"));
+        newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(10)));
     }
 
     if (props.getUpgradeCount("earthUpgradeR1C1") == 1){
-        newEarth *= 1 + props.getValue("fireGeneratorAmount") + props.getValue("earthGeneratorAmount") + props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult");
+        newEarth = newEarth.times(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))));
     }
 
     if (earthR2C3prod[1] == "earth"){
-        newEarth *= earthR2C3prod[0];
+        newEarth = newEarth.times(earthR2C3prod[0]);
     }
 
     props.addValue("earth", newEarth);
 
     // Water
-    let newWater = getGeneratorAmount("water") * props.getValue("waterGeneratorMult") * deltaTime
+    let newWater = getGeneratorAmount("water").times(props.getValue("waterGeneratorMult")).times(deltaTime);
 
     if (props.getUpgradeCount("earthUpgradeR2C2") == 1){
-        newWater += newEarth * 0.01;
+        newWater = newWater.plus(newEarth.times(0.01));
     }
 
-    newWater *= 2 ** props.getUpgradeCount("waterRepeatable")
+    newWater = newWater.times(new Decimal(2).pow(props.getUpgradeCount("waterRepeatable")));
 
 
 
     if (props.getUpgradeCount("waterUpgradeR1C1")){
-        newWater *= props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult") + 1
+        newWater = newWater.times(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult")).plus(1))
     }
 
     if (props.getUpgradeCount("waterUpgradeR2C1")){
-        newWater *= 1.25 ** Math.log(props.getValue("fire")) + 1
+        newWater = newWater.times(new Decimal(1.25).pow(props.getValue("fire").log(10)).plus(1));
     }
 
     if (props.getUpgradeCount("waterUpgradeR1C2")){
-        let leftoverWater = newWater * 0.05
+        let leftoverWater = newWater.times(0.05)
         props.addValue("condensorMult", leftoverWater);
         
-        newWater = newWater * 0.95 * 1.1 ** Math.log(props.getValue("condensorMult"));
+        newWater = newWater.times(0.95).times(new Decimal(1.1).pow(Math.log(props.getValue("condensorMult"))));
     }
 
     if (earthR2C3prod[1] == "water"){
-        newWater *= earthR2C3prod[0];
+        newWater = newWater.times(earthR2C3prod[0]);
     }
 
 
@@ -153,40 +159,40 @@ function GeneratorTab(props) {
 
 
     // Fire
-    let newFire = getGeneratorAmount("fire") * deltaTime 
+    let newFire = getGeneratorAmount("fire").times(deltaTime); 
 
     if (props.getUpgradeCount("fireUpgradeR1C1") == 1){
-        newFire *= 3.5;
+        newFire = newFire.times(3.5);
     }
 
     if (props.getUpgradeCount("waterUpgradeR2C2") == 1){
-        newFire += newWater * 0.01;
+        newFire = newFire.plus(newWater.times(0.01));
     }
 
 
-    newFire *= 2 ** props.getUpgradeCount("fireRepeatable")
+    newFire = newFire.times(new Decimal(2).pow(props.getUpgradeCount("fireRepeatable")));
 
 
     if (props.getUpgradeCount("fireUpgradeR1C2") == 1){
-        newFire *= 1 + (50000 / (props.getValue("timeSinceLastRebirth")/1000))
+        newFire = newFire.times(new Decimal(1).plus(new Decimal(50000).dividedBy(props.getValue("timeSinceLastRebirth").dividedBy(new Decimal(1000)))));
     }
 
     // Flame burst (Fire Upgrade R2C1-3)
     if (props.getUpgradeCount("fireUpgradeR2C1") >= 1){
         let random = Math.random()
-        if (random <= props.getValue("flameburstChance")){
-            flameburstQueue.push(props.getValue("flameburstLength") * 1000  + Date.now())
+        if (props.getValue("flameburstChance").greaterThanOrEqualTo(random)){
+            flameburstQueue.push(props.getValue("flameburstLength").times(1000).plus(Date.now()))
         }
         
-        while (flameburstQueue[0] < Date.now()){
+        while (flameburstQueue.length > 0 && new Decimal(Date.now()).greaterThan(flameburstQueue[0])){
             flameburstQueue.splice(0, 1);
         }
 
-        newFire *= props.getValue("flameburstMult") ** flameburstQueue.length
+        newFire = newFire.times(props.getValue("flameburstMult").pow(flameburstQueue.length));
     }
 
     if (earthR2C3prod[1] == "fire"){
-        newFire *= earthR2C3prod[0];
+        newFire = newFire.times(earthR2C3prod[0]);
     }
 
     props.addValue("fire", newFire);
@@ -228,24 +234,24 @@ function GeneratorTab(props) {
             <button className="Generator" id="fireGenerator" onClick={() => buyGenerator("fire")}>
                 <h3>Fire Generator</h3>
                 <p>You have {props.formatValues(props.getValue("fire"))} Fire</p>
-                <h3>{props.getValue("fireGeneratorAmount")}</h3>
-                <h4>Cost: {getCost("fire")} {props.getValue("fireGeneratorAmount") > 0 ? "fire" : "energy"}</h4>
+                <h3>{props.formatValues(props.getValue("fireGeneratorAmount"))}</h3>
+                <h4>Cost: {props.formatValues(getCost("fire"))} {props.getValue("fireGeneratorAmount") > 0 ? "fire" : "energy"}</h4>
             
             </button>
 
             <button className="Generator" id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"))} Water</p>
-                <h3>{props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult")}</h3>
-                <h4>Cost: {getCost("water")} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
+                <h3>{props.formatValues((props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))))}</h3>
+                <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
             </button>
 
             <button className="Generator" id="earthGenerator" onClick={() => buyGenerator("earth")}>
                 <h3>Earth Generator</h3>
                 <p>You have {props.formatValues(props.getValue("earth"))} Earth</p>
-                <h3>{props.getValue("earthGeneratorAmount")}</h3>
-                <h4>Cost: {getCost("earth")} {props.getValue("earthGeneratorAmount") > 0 ? "earth" : "energy"}</h4>
+                <h3>{props.formatValues(props.getValue("earthGeneratorAmount"))}</h3>
+                <h4>Cost: {props.formatValues(getCost("earth"))} {props.getValue("earthGeneratorAmount") > 0 ? "earth" : "energy"}</h4>
             
             </button>
             
@@ -254,24 +260,24 @@ function GeneratorTab(props) {
             <button className="Generator" id="airGenerator" onClick={() => buyGenerator("air")}>
                 <h3>Air Generator</h3>
                 <p>You have {props.formatValues(props.getValue("air"))} Air</p>
-                <h3>{props.getValue("airGeneratorAmount")}</h3>
-                <h4>Cost: {getCost("air")} {props.getValue("airGeneratorAmount") > 0 ? "air" : "energy"}</h4>
+                <h3>{props.formatValues(props.getValue("airGeneratorAmount"))}</h3>
+                <h4>Cost: {props.formatValues(getCost("air"))} {props.getValue("airGeneratorAmount") > 0 ? "air" : "energy"}</h4>
             
             </button>
 
             <button className="Generator" id="spaceGenerator" onClick={() => buyGenerator("space")}>
                 <h3>Space Generator</h3>
                 <p>You have {props.formatValues(props.getValue("space"))} Space</p>
-                <h3>{props.getValue("spaceGeneratorAmount")}</h3>
-                <h4>Cost: {getCost("space")} {props.getValue("spaceGeneratorAmount") > 0 ? "space" : "energy"}</h4>
+                <h3>{props.formatValues(props.getValue("spaceGeneratorAmount"))}</h3>
+                <h4>Cost: {props.formatValues(getCost("space"))} {props.getValue("spaceGeneratorAmount") > 0 ? "space" : "energy"}</h4>
             
             </button>
 
             <button className="Generator" id="aetherGenerator" onClick={() => buyGenerator("aether")}>
                 <h3>Aether Generator</h3>
                 <p>You have {props.formatValues(props.getValue("aether"))} Aether</p>
-                <h3>{props.getValue("aetherGeneratorAmount")}</h3>
-                <h4>Cost: {getCost("aether")} {props.getValue("aetherGeneratorAmount") > 0 ? "aether" : "energy"}</h4>
+                <h3>{props.formatValues(props.getValue("aetherGeneratorAmount"))}</h3>
+                <h4>Cost: {props.formatValues(getCost("aether"))} {props.getValue("aetherGeneratorAmount") > 0 ? "aether" : "energy"}</h4>
             
             </button>
         </div>

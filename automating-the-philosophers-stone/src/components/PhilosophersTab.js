@@ -1,5 +1,6 @@
 import './PhilosophersTab.css';
 import React, {useState} from "react";
+import Decimal from "break_infinity.js";
 
 import VerticalProgress from './verticalProgressBar';
 
@@ -7,33 +8,37 @@ function PhilosophersTab(props) {
 
   function ResetEnergy(){
     // Resets a bunch of values
-    props.setValue("spentEnergy", 0);
+    props.setValue("spentEnergy", new Decimal(0));
 
     // Add to sacrifice total based on element amounts
-    let elementTotal = (Math.log10(props.getValue("fire")+1) + Math.log(props.getValue("earth")+1) / Math.log(2) + Math.log(props.getValue("water")+1) / Math.log(4)) / 100;
-    props.addValue("sacrificedTotal", elementTotal)
 
-    let newEnergyMult = 1.01 ** ((props.getValue("sacrificedTotal") + elementTotal) * 100);
-    console.log(props.getValue("sacrificedTotal"), newEnergyMult);
+    let fireEnergyContribution = new Decimal(props.getValue("maxFire").plus(1).log(10)).floor(); 
+    let waterEnergyContribution = new Decimal(props.getValue("maxWater").plus(1).log(4)).floor(); 
+    let earthEnergyContribution = new Decimal(props.getValue("maxEarth").plus(1).log(2)).floor()
 
-    props.setValue("energyMult", newEnergyMult);
+    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution);
+    props.setValue("sacrificedTotal", new Decimal(elementTotal))
 
-    props.setValue("fire", 0);
-    props.setValue("earth", 0);
-    props.setValue("water", 0);
+    let newEnergyMult = 1.01 ** ((elementTotal.greaterThan(props.getValue("sacrificedValue")) ? elementTotal : props.getValue("sacrifiedTotal")));
 
-    props.setValue("fireGeneratorAmount", 0);
-    props.setValue("waterGeneratorAmount", 0);
-    props.setValue("earthGeneratorAmount", 0);
+    props.setValue("energyMult", new Decimal(newEnergyMult));
 
-    props.setValue("flameburstChance", 0.1);
-    props.setValue("flameburstMult", 10);
-    props.setValue("flameburstLength", 0);
+    props.setValue("fire", new Decimal(0));
+    props.setValue("earth", new Decimal(0));
+    props.setValue("water", new Decimal(0));
 
-    props.setValue("condensorMult", 1);
-    props.setValue("waterGeneratorMult", 1);
+    props.setValue("fireGeneratorAmount", new Decimal(0));
+    props.setValue("waterGeneratorAmount", new Decimal(0));
+    props.setValue("earthGeneratorAmount", new Decimal(0));
 
-    props.setValue("timeSinceLastReset", Date.now());
+    props.setValue("flameburstChance", new Decimal(0.1));
+    props.setValue("flameburstMult", new Decimal(10));
+    props.setValue("flameburstLength", new Decimal(0));
+
+    props.setValue("condensorMult", new Decimal(1));
+    props.setValue("waterGeneratorMult", new Decimal(1));
+
+    props.setValue("timeSinceLastReset", new Decimal(Date.now()));
 
     props.resetAllUpgrades();
    
@@ -44,7 +49,7 @@ function PhilosophersTab(props) {
     <div className="PhilosophersContainer">
       <div id="progressBarContainer">
         <h3>{props.formatValues(props.getValue("energyMult"))}x Energy</h3>
-        <VerticalProgress  progress={props.formatValues(props.getValue("sacrificedTotal"))}/>
+        <VerticalProgress  progress={props.getValue("sacrificedTotal")/100}/>
       </div>
 
       <div>
