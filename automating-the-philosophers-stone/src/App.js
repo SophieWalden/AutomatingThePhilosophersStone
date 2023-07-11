@@ -137,7 +137,7 @@ function App() {
     let [cost, element] = getUpgradeCost(upgrade);
 
     let elementAmount = element == "energy" ? getValue("energyLeft") : getValue(element)
-    if (elementAmount.greaterThan(cost)){
+    if (elementAmount.greaterThanOrEqualTo(cost)){
 
       if (element != "energy"){
         addValue(element, cost.times(-1));
@@ -181,7 +181,7 @@ function App() {
   function calculateNewEnergy(){
     let energyValue = new Decimal(1);
 
-    energyValue = energyValue.plus(new Decimal(maxFire.plus(1).log(10)).floor()); 
+    energyValue = energyValue.plus(new Decimal(maxFire.plus(1).log10()).floor()); 
 
     energyValue = energyValue.plus(new Decimal(maxWater.plus(1).log(4)).floor()); 
 
