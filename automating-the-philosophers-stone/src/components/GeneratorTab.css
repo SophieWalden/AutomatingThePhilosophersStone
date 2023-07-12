@@ -1,4 +1,7 @@
 
+.notUnlocked{
+    display: none;
+}
 
 #GeneratorsfirstRow,
 #GeneratorssecondRow{

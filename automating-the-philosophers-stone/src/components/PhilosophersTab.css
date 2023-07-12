@@ -1,5 +1,15 @@
 
 
+.unlocked:disabled{
+    background-color: #bf7b6b !important;
+    border: none;
+}
+
+#philosophyMilestones button:disabled{
+    border-radius: 15px;
+    background-color: #e0b1a6;
+}
+
 #philosophyResetButton{
     width: 30vw;
     height: 20vh;
@@ -37,10 +47,6 @@
     font-size: 0.75vw;
     height: 4vh;
 }
-
-
-
-  
 
   #progressBarContainer{
     height: 60vh;

@@ -53,18 +53,22 @@ function App() {
   let [maxWater, setMaxWater] = useState(new Decimal(0));
   let [maxEarth, setMaxEarth] = useState(new Decimal(0));
   let [maxFire, setMaxFire] = useState(new Decimal(0));
+  let [maxAir, setMaxAir] = useState(new Decimal(0));
   
 
-  function formatValues(value){
+  function formatValues(value, decimalMode){
 
     if (new Decimal(1000).greaterThan(value)){
       // Return small decimal number
       
       value = value.times(100).floor().divideBy(100).toString()
-      if (value.indexOf(".") == -1) return value
+      if (value.indexOf(".") == -1 && decimalMode != true) return value
       
+      if (value.indexOf(".") == -1 && decimalMode == true) return value + ".00"
+
       value = value.substring(0, value.indexOf(".") + 3)
       let paddingNeeded = 3 - (value.length - value.indexOf("."));
+
 
       return value + "0".repeat(paddingNeeded);
       
@@ -73,13 +77,13 @@ function App() {
     return value.toExponential(2).toString().replace("+","");
   }
 
-  let valueGetters = {"air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  let valueGetters = {"maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
   
   function getValue(name){
     return valueGetters[name];
   }
 
-  let valueSetters = {"air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"setMaxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
   function setValue(name, value){
     valueSetters[name](value);
@@ -187,6 +191,8 @@ function App() {
 
     energyValue = energyValue.plus(new Decimal(maxEarth.plus(1).log(2)).floor()); 
 
+    energyValue = energyValue.plus(new Decimal(maxAir.plus(1).log(1.5)).floor()); 
+
     energyValue = energyValue.times(energyMult).floor()
 
     if (energyValue.greaterThan(energy)){
@@ -211,6 +217,10 @@ function App() {
 
     if (getValue("earth").greaterThan(maxEarth)){
       setMaxEarth(getValue("earth"));
+    }
+
+    if (getValue("air").greaterThan(maxAir)){
+      setMaxAir(getValue("air"));
     }
   }
 

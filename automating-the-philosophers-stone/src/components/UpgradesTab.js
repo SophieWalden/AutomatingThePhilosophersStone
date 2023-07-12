@@ -154,7 +154,7 @@ function UpgradesTab(props) {
             <button disabled={props.getUpgradeCount("earthUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C1")} >
                     <h3>Hearth Home</h3>
                     <p>Increase production based on total generator count</p>
-                    <h5>Current: {1 + props.getValue("fireGeneratorAmount") + props.getValue("earthGeneratorAmount") + props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult")}x</h5>
+                    <h5>Current: {props.formatValues(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))))}x</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("earthUpgradeR1C1")[0])} {props.getUpgradeCost("earthUpgradeR1C1")[1]}</h4>
 
               </button>

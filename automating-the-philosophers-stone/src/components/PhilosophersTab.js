@@ -19,8 +19,7 @@ function PhilosophersTab(props) {
     let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution);
     props.setValue("sacrificedTotal", new Decimal(elementTotal))
 
-    let newEnergyMult = 1.01 ** ((elementTotal.greaterThan(props.getValue("sacrificedValue")) ? elementTotal : props.getValue("sacrifiedTotal")));
-
+    let newEnergyMult = new Decimal(1.01).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
     props.setValue("energyMult", new Decimal(newEnergyMult));
 
     props.setValue("fire", new Decimal(0));
@@ -49,7 +48,7 @@ function PhilosophersTab(props) {
     <div className="PhilosophersContainer">
       <div id="progressBarContainer">
         <h3>{props.formatValues(props.getValue("energyMult"))}x Energy</h3>
-        <VerticalProgress  progress={props.getValue("sacrificedTotal")/100}/>
+        <VerticalProgress  progress={props.getValue("sacrificedTotal").dividedBy(100)}/>
       </div>
 
       <div>
@@ -63,14 +62,16 @@ function PhilosophersTab(props) {
       <div id="philosophyMilestones">
             <h3>Milestones</h3>
             <div className="milestonesRow">
-              <button className='Upgrade' >
+
+                
+                <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.5) ? "unlocked" : ""} >
                     <h3>Arid Production</h3>
                     <p>Unlocks the air generator!</p>
                     <h4>Unlocks at 0.5% Filled</h4>
 
               </button>
 
-              <button className='Upgrade' >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) ? "unlocked" : ""} >
                   <h3>Robot Takeover</h3>
                   <p>All basic autobuyer upgrades are permentaly on without costing energy</p>
                   <h4>Unlocks at 2.5% Filled</h4>
@@ -80,14 +81,14 @@ function PhilosophersTab(props) {
             </div>
 
             <div className="milestonesRow">
-              <button className='Upgrade' >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) ? "unlocked" : ""} >
                   <h3>Hassle Ender</h3>
                   <p>Unlock an autobuyer that automatically buys 2x upgrades</p>
                   <h4>Unlocks at 5% Filled</h4>
 
               </button>
 
-              <button className='Upgrade' >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(15) ? "unlocked" : ""} >
                   <h3>Challengers</h3>
                   <p>Unlock challenges, difficult adventures with great rewards included!</p>
                   <h4>Unlocks at 15% Filled</h4>
@@ -97,14 +98,14 @@ function PhilosophersTab(props) {
             </div>
 
             <div className="milestonesRow">
-              <button className='Upgrade' >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(50) ? "unlocked" : ""} >
                   <h3>Spaced out</h3>
                   <p>Unlock the Space Generator</p>
                   <h4>Unlocks at 50% Filled</h4>
 
               </button>
 
-              <button className='Upgrade' >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(70) ? "unlocked" : ""} >
                 <h3>Help from Beyond</h3>
                   <p>Unlocks the Aether Generator</p>
                   <h4>Unlocks at 70% Filled</h4>

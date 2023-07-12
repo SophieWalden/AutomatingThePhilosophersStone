@@ -105,10 +105,18 @@ function GeneratorTab(props) {
         }
         
     }
+
+    
+    // Air
+    let newAir = getGeneratorAmount("air").times(deltaTime)
+
+    props.addValue("air", newAir);
     
 
     // Earth
     let newEarth = getGeneratorAmount("earth").times(deltaTime)
+
+    newEarth = newEarth.times(props.getValue("air").plus(1))
 
     if (props.getUpgradeCount("earthUpgradeR2C1") == 1){
         newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(10)));
@@ -122,6 +130,8 @@ function GeneratorTab(props) {
         newEarth = newEarth.times(earthR2C3prod[0]);
     }
 
+    newEarth = newEarth.times(new Decimal(2).pow(props.getUpgradeCount("earthRepeatable")))
+
     props.addValue("earth", newEarth);
 
     // Water
@@ -130,6 +140,8 @@ function GeneratorTab(props) {
     if (props.getUpgradeCount("earthUpgradeR2C2") == 1){
         newWater = newWater.plus(newEarth.times(0.01));
     }
+
+    newWater = newWater.times(props.getValue("air").plus(1))
 
     newWater = newWater.times(new Decimal(2).pow(props.getUpgradeCount("waterRepeatable")));
 
@@ -159,14 +171,16 @@ function GeneratorTab(props) {
 
 
     // Fire
-    let newFire = getGeneratorAmount("fire").times(deltaTime); 
+    let newFire = getGeneratorAmount("fire").times(deltaTime);
+    
+    if (props.getUpgradeCount("waterUpgradeR2C2") == 1){
+        newFire = newFire.plus(newWater.times(0.01));
+    }
+
+    newFire = newFire.times(props.getValue("air").plus(1))
 
     if (props.getUpgradeCount("fireUpgradeR1C1") == 1){
         newFire = newFire.times(3.5);
-    }
-
-    if (props.getUpgradeCount("waterUpgradeR2C2") == 1){
-        newFire = newFire.plus(newWater.times(0.01));
     }
 
 
@@ -223,7 +237,8 @@ function GeneratorTab(props) {
     props.getUpgradeCount("fireUpgradeR1C3") && canYouBuyGenerator("fire"), props.getUpgradeCount("fireUpgradeR2C1"), props.getUpgradeCount("fireUpgradeR2C2"), props.getUpgradeCount("fireUpgradeR2C3"),
     flameburstQueue.length, props.getUpgradeCount("waterUpgradeR1C1"), props.getUpgradeCount("waterRepeatable"), props.getUpgradeCount("waterUpgradeR1C2"), props.getUpgradeCount("waterUpgradeR1C3") && canYouBuyGenerator("water"),
     props.getUpgradeCount("waterUpgradeR2C1"), props.getUpgradeCount("waterUpgradeR2C2"), props.getUpgradeCount("waterUpgradeR2C3"), props.getUpgradeCount("earthUpgradeR1C1"), props.getUpgradeCount("earthRepeatable"), props.getUpgradeCount("earthUpgradeR1C2"), props.getUpgradeCount("earthUpgradeR1C3") && canYouBuyGenerator("earth"),
-    props.getUpgradeCount("earthUpgradeR2C1"), props.getUpgradeCount("earthUpgradeR2C2"), props.getUpgradeCount("earthUpgradeR2C3"), props.getUpgradeCount("fireUpgradeR1C1")])
+    props.getUpgradeCount("earthUpgradeR2C1"), props.getUpgradeCount("earthUpgradeR2C2"), props.getUpgradeCount("earthUpgradeR2C3"), props.getUpgradeCount("fireUpgradeR1C1"), props.getValue("air"), props.getValue("airGeneratorAmount")
+            ])
     
 
   return (
@@ -233,7 +248,7 @@ function GeneratorTab(props) {
         <div id="GeneratorsfirstRow">
             <button className="Generator" id="fireGenerator" onClick={() => buyGenerator("fire")}>
                 <h3>Fire Generator</h3>
-                <p>You have {props.formatValues(props.getValue("fire"))} Fire</p>
+                <p>You have {props.formatValues(props.getValue("fire"), true)} Fire</p>
                 <h3>{props.formatValues(props.getValue("fireGeneratorAmount"))}</h3>
                 <h4>Cost: {props.formatValues(getCost("fire"))} {props.getValue("fireGeneratorAmount") > 0 ? "fire" : "energy"}</h4>
             
@@ -241,7 +256,7 @@ function GeneratorTab(props) {
 
             <button className="Generator" id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
-                <p>You have {props.formatValues(props.getValue("water"))} Water</p>
+                <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
                 <h3>{props.formatValues((props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))))}</h3>
                 <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
@@ -249,7 +264,7 @@ function GeneratorTab(props) {
 
             <button className="Generator" id="earthGenerator" onClick={() => buyGenerator("earth")}>
                 <h3>Earth Generator</h3>
-                <p>You have {props.formatValues(props.getValue("earth"))} Earth</p>
+                <p>You have {props.formatValues(props.getValue("earth"), true)} Earth</p>
                 <h3>{props.formatValues(props.getValue("earthGeneratorAmount"))}</h3>
                 <h4>Cost: {props.formatValues(getCost("earth"))} {props.getValue("earthGeneratorAmount") > 0 ? "earth" : "energy"}</h4>
             
@@ -257,15 +272,15 @@ function GeneratorTab(props) {
             
         </div>
         <div id="GeneratorssecondRow">
-            <button className="Generator" id="airGenerator" onClick={() => buyGenerator("air")}>
+            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.5) ? "" : "notUnlocked"}`} id="airGenerator" onClick={() => buyGenerator("air")}>
                 <h3>Air Generator</h3>
-                <p>You have {props.formatValues(props.getValue("air"))} Air</p>
+                <p>You have {props.formatValues(props.getValue("air"), true)} Air, giving a {props.formatValues(props.getValue("air").plus(1), true)}x Multiplier to all previous generators</p>
                 <h3>{props.formatValues(props.getValue("airGeneratorAmount"))}</h3>
                 <h4>Cost: {props.formatValues(getCost("air"))} {props.getValue("airGeneratorAmount") > 0 ? "air" : "energy"}</h4>
             
             </button>
 
-            <button className="Generator" id="spaceGenerator" onClick={() => buyGenerator("space")}>
+            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(50) ? "" : "notUnlocked"}`} id="spaceGenerator" onClick={() => buyGenerator("space")}>
                 <h3>Space Generator</h3>
                 <p>You have {props.formatValues(props.getValue("space"))} Space</p>
                 <h3>{props.formatValues(props.getValue("spaceGeneratorAmount"))}</h3>
@@ -273,7 +288,7 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button className="Generator" id="aetherGenerator" onClick={() => buyGenerator("aether")}>
+            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(70) ? "" : "notUnlocked"}`} id="aetherGenerator" onClick={() => buyGenerator("aether")}>
                 <h3>Aether Generator</h3>
                 <p>You have {props.formatValues(props.getValue("aether"))} Aether</p>
                 <h3>{props.formatValues(props.getValue("aetherGeneratorAmount"))}</h3>
