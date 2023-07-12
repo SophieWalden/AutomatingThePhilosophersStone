@@ -1,0 +1,67 @@
+#cancelImportButton{
+    background-color: #A78295 !important;
+    width: 3vw !important;
+    height: 3vw !important;
+    position: absolute;
+    left: 37vw;
+    bottom: 35vh;
+}
+
+#OptionsContainer button{
+    width: 15vw;
+    height: 8vh;
+    font-size: 1.25vw;
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.1);
+    border: solid 2px rgb(161, 139, 139);
+    border-radius: 15px;
+    
+
+}
+
+#OptionsContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#OptionsButtonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 70vw;
+}
+
+#OptionsContainer button:hover{
+    background-color: rgba(255,255,255,0.25);
+}
+
+.displayNone{
+    display: none !important;
+}
+
+#importPrompt{
+    position: absolute;
+    z-index: 100;
+    background-color: #331D2C;
+    width: 40vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+
+#importPrompt textArea{
+    margin-left: 2vw;
+    width: 20vw !important;
+    height: 13vh !important;
+}
+
+#importSubmitButton{
+    margin-top: 2vh;
+    width: 10vw !important;
+    height: 5vh !important;
+}

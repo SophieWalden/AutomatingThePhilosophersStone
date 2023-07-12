@@ -30,12 +30,12 @@ function TabManager(props) {
       </div>
 
       <div id="tabs">
-        <div className={tab!=="Generators" ? "hiddenTab" : undefined}><GeneratorTab  
+        <div className={tab!=="Generators" ? "hiddenTab" : undefined}><GeneratorTab  buyUpgrade={props.buyUpgrade} getUpgradeCost={props.getUpgradeCost}
                 getValue={props.getValue} setValue={props.setValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount}/></div>
         <div className={tab!=="Upgrades" ? "hiddenTab" : undefined}><UpgradesTab setValue={props.setValue} getValue={props.getValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount} buyUpgrade={props.buyUpgrade} getUpgradeCost={props.getUpgradeCost}/></div>
         <div className={tab!=="Philosophers" ? "hiddenTab" : undefined}><PhilosophersTab resetAllUpgrades={props.resetAllUpgrades} addValue={props.addValue} setValue={props.setValue} formatValues={props.formatValues} getValue={props.getValue} getUpgradeCount={props.getUpgradeCount} getUpgradeCost={props.getUpgradeCost}/></div>
         <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab /></div>
-        <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab /></div>
+        <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab setUpgrade={props.setUpgrade} getUpgradeCount={props.getUpgradeCount} getValue={props.getValue} setValue={props.setValue} /></div>
         <div className={tab!=="Formulas" ? "hiddenTab" : undefined}><FormulaTab getValue={props.getValue} formatValues={props.formatValues}/></div>
       </div>
     </div>

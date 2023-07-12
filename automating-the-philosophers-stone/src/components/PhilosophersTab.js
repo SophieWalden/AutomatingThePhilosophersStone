@@ -32,7 +32,7 @@ function PhilosophersTab(props) {
 
     props.setValue("flameburstChance", new Decimal(0.1));
     props.setValue("flameburstMult", new Decimal(10));
-    props.setValue("flameburstLength", new Decimal(0));
+    props.setValue("flameburstLength", new Decimal(1));
 
     props.setValue("condensorMult", new Decimal(1));
     props.setValue("waterGeneratorMult", new Decimal(1));

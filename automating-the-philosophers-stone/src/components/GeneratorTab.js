@@ -1,10 +1,11 @@
 import './GeneratorTab.css';
 import React, {useState} from "react";
 import Decimal from "break_infinity.js";
+import { a } from 'react-spring';
 
 function GeneratorTab(props) {
 
-    let flameburstQueue = [];
+    
 
     function getCost(element){
         let costs = {"fire": new Decimal(new Decimal(2).pow(props.getValue("fireGeneratorAmount"))).floor(),
@@ -81,6 +82,7 @@ function GeneratorTab(props) {
   }
 
   function update(){
+
     // Everything that needs to be called routinely
     let deltaTime = new Decimal(33).dividedBy(1000);
 
@@ -190,20 +192,25 @@ function GeneratorTab(props) {
     if (props.getUpgradeCount("fireUpgradeR1C2") == 1){
         newFire = newFire.times(new Decimal(1).plus(new Decimal(50000).dividedBy(props.getValue("timeSinceLastRebirth").dividedBy(new Decimal(1000)))));
     }
+    
 
     // Flame burst (Fire Upgrade R2C1-3)
     if (props.getUpgradeCount("fireUpgradeR2C1") >= 1){
-        let random = Math.random()
-        if (props.getValue("flameburstChance").greaterThanOrEqualTo(random)){
-            flameburstQueue.push(props.getValue("flameburstLength").times(1000).plus(Date.now()))
+        let procs = 0;
+
+        for (let i = 0; i < props.getUpgradeCount("fireUpgradeR2C3") + 1; i++){
+            let random = Math.random();
+            if ((props.getUpgradeCount("fireUpgradeR2C1") * 0.05 + 0.1) >= random){
+                procs += 1;
+            }else{
+                break;
+            }
         }
         
-        while (flameburstQueue.length > 0 && new Decimal(Date.now()).greaterThan(flameburstQueue[0])){
-            flameburstQueue.splice(0, 1);
-        }
-
-        newFire = newFire.times(props.getValue("flameburstMult").pow(flameburstQueue.length));
+        newFire = newFire.times((new Decimal(1.5).pow(props.getUpgradeCount("fireUpgradeR2C2")).times(10)).pow(procs));
     }
+
+
 
     if (earthR2C3prod[1] == "fire"){
         newFire = newFire.times(earthR2C3prod[0]);
@@ -212,17 +219,28 @@ function GeneratorTab(props) {
     props.addValue("fire", newFire);
 
     // Autobuyers
-    if (props.getUpgradeCount("fireUpgradeR1C3") == 1 && canYouBuyGenerator("fire")){
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
+        props.buyUpgrade("fireRepeatable");
+    }
+    else if ((props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("fire")){
         buyGenerator("fire");
     }
 
-    if (props.getUpgradeCount("waterUpgradeR1C3") == 1 && canYouBuyGenerator("water")){
-        buyGenerator("water")
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("earth").greaterThanOrEqualTo(props.getUpgradeCost("earthRepeatable")[0])){
+        props.buyUpgrade("earthRepeatable");
     }
-
-    if (props.getUpgradeCount("earthUpgradeR1C3") == 1 && canYouBuyGenerator("earth")){
+    else if ((props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("earth")){
         buyGenerator("earth")
     }
+
+
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("water").greaterThanOrEqualTo(props.getUpgradeCost("waterRepeatable")[0])){
+        props.buyUpgrade("waterRepeatable");
+    }
+    else if ((props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("water")){
+        buyGenerator("water")
+    }
+ 
 
   }
 
@@ -235,10 +253,10 @@ function GeneratorTab(props) {
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
 }, [props.getValue("fireGeneratorAmount"), props.getUpgradeCount("fireRepeatable"), props.getValue("waterGeneratorAmount"), props.getValue("earthGeneratorAmount"), props.getUpgradeCount("fireUpgradeR1C2"),
     props.getUpgradeCount("fireUpgradeR1C3") && canYouBuyGenerator("fire"), props.getUpgradeCount("fireUpgradeR2C1"), props.getUpgradeCount("fireUpgradeR2C2"), props.getUpgradeCount("fireUpgradeR2C3"),
-    flameburstQueue.length, props.getUpgradeCount("waterUpgradeR1C1"), props.getUpgradeCount("waterRepeatable"), props.getUpgradeCount("waterUpgradeR1C2"), props.getUpgradeCount("waterUpgradeR1C3") && canYouBuyGenerator("water"),
+     props.getUpgradeCount("waterUpgradeR1C1"), props.getUpgradeCount("waterRepeatable"), props.getUpgradeCount("waterUpgradeR1C2"), props.getUpgradeCount("waterUpgradeR1C3") && canYouBuyGenerator("water"),
     props.getUpgradeCount("waterUpgradeR2C1"), props.getUpgradeCount("waterUpgradeR2C2"), props.getUpgradeCount("waterUpgradeR2C3"), props.getUpgradeCount("earthUpgradeR1C1"), props.getUpgradeCount("earthRepeatable"), props.getUpgradeCount("earthUpgradeR1C2"), props.getUpgradeCount("earthUpgradeR1C3") && canYouBuyGenerator("earth"),
     props.getUpgradeCount("earthUpgradeR2C1"), props.getUpgradeCount("earthUpgradeR2C2"), props.getUpgradeCount("earthUpgradeR2C3"), props.getUpgradeCount("fireUpgradeR1C1"), props.getValue("air"), props.getValue("airGeneratorAmount")
-            ])
+            ,])
     
 
   return (

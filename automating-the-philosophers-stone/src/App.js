@@ -34,7 +34,7 @@ function App() {
   // Flameburst (Fire Upgrades R2C1-3)
   let [flameburstMult, setFlameburstMult] = useState(new Decimal(10));
   let [flameburstChance, setFlameburstChance] = useState(new Decimal(0.1));
-  let [flameburstLength, setFlameburstLength] = useState(new Decimal(0));
+  let [flameburstLength, setFlameburstLength] = useState(new Decimal(1));
 
   // Condensor (WaterUpgrade R1C2)
   let [waterProductionMult, setWaterProductionMult] = useState(new Decimal(1));
@@ -83,7 +83,7 @@ function App() {
     return valueGetters[name];
   }
 
-  let valueSetters = {"setMaxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
   function setValue(name, value){
     valueSetters[name](value);
@@ -137,7 +137,13 @@ function App() {
                  "earthUpgradeR1C3": earthUpgradeR1C3, "earthUpgradeR2C1": earthUpgradeR2C1, "earthUpgradeR2C2": earthUpgradeR2C2,
                  "earthUpgradeR2C3": earthUpgradeR2C3}
 
-  function buyUpgrade(upgrade){
+
+  let [rebuyableUpgrade, setRebuyableUpgrade] = React.useState("");
+  let [upgradeAmount, setUpgradeAmount] = React.useState(0)
+  function buyUpgrade(upgrade, amount){
+    if (amount == undefined) amount = 1;
+    if (amount <= 0) return true;
+
     let [cost, element] = getUpgradeCost(upgrade);
 
     let elementAmount = element == "energy" ? getValue("energyLeft") : getValue(element)
@@ -149,11 +155,21 @@ function App() {
         addValue("spentEnergy", cost);
       }
       
-      setters[upgrade](value => value + 1)
-      return true;
+      setters[upgrade](value => value + 1);
+      setRebuyableUpgrade(upgrade);
+      setUpgradeAmount(amount - 1);
+    }else{
+      return false
     }
 
-    return false;
+  }
+
+  useEffect(() => {
+    buyUpgrade(rebuyableUpgrade, upgradeAmount)
+  }, [upgradeAmount])
+
+  function setUpgrade(upgrade, value){
+    setters[upgrade](value);
   }
 
   function getUpgradeCount(upgrade){
@@ -162,10 +178,10 @@ function App() {
 
   function getUpgradeCost(upgrade){
     let costs = {"fireRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("fireRepeatable"))), "fire"],
-                 "fireUpgradeR1C1": [new Decimal(2), "energy"],"fireUpgradeR1C2": [new Decimal(5), "energy"],"fireUpgradeR1C3": [new Decimal(15), "energy"],
+                 "fireUpgradeR1C1": [new Decimal(3), "energy"],"fireUpgradeR1C2": [new Decimal(5), "energy"],"fireUpgradeR1C3": [new Decimal(15), "energy"],
                  "fireUpgradeR2C1": [new Decimal(10).times(new Decimal(2).pow( getUpgradeCount("fireUpgradeR2C1"))), "energy"], "fireUpgradeR2C2": [(new Decimal(15).times(new Decimal(1.5).pow(getUpgradeCount("fireUpgradeR2C2")))).ceil(), "energy"], "fireUpgradeR2C3": [new Decimal(25), "energy"],
                  "waterRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("waterRepeatable"))), "water"],
-                 "waterUpgradeR1C1": [new Decimal(5), "energy"],"waterUpgradeR1C2": [new Decimal(10), "energy"],"waterUpgradeR1C3": [new Decimal(25), "energy"],
+                 "waterUpgradeR1C1": [new Decimal(4), "energy"],"waterUpgradeR1C2": [new Decimal(7), "energy"],"waterUpgradeR1C3": [new Decimal(25), "energy"],
                  "waterUpgradeR2C1": [new Decimal(15), "energy"], "waterUpgradeR2C2": [new Decimal(20), "energy"], "waterUpgradeR2C3": [new Decimal(40), "energy"],
                  "earthRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("earthRepeatable"))), "earth"],
                  "earthUpgradeR1C1": [new Decimal(5), "energy"],"earthUpgradeR1C2": [new Decimal(10), "energy"],"earthUpgradeR1C3": [new Decimal(25), "energy"],
@@ -240,9 +256,9 @@ function App() {
     <div className="App">
 
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy)}</span> Energy</h2>
-      <h2 className="ResourceDisplay">You have spent <span id="pink">{formatValues(spentEnergy)}</span> of your Energy</h2>
+      <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy.minus(spentEnergy))}</span> unspent Energy</h2>
 
-      <TabManager resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
+      <TabManager setUpgrade={setUpgrade} resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
     </div>
   );
 }

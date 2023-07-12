@@ -4,6 +4,19 @@ import Decimal from "break_infinity.js";
 
 function UpgradesTab(props) {
 
+  function canBuyUpgrade(upgrade){
+    let [cost, element] = props.getUpgradeCost(upgrade);
+
+    if (props.getValue(element).greaterThanOrEqualTo(cost)){
+      return true;
+    }
+
+    return false;
+  }
+
+  function buyMax(upgrade){
+    props.buyUpgrade(upgrade, 5000000);
+  }
 
   return (
     
@@ -28,7 +41,7 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("fireUpgradeR1C3") == 1} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) } className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C3")} >
                   <h3>Frequent Flamer</h3>
                   <p>Autobuyer buys a fire generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -38,7 +51,7 @@ function UpgradesTab(props) {
             </div>
 
             <div className="fireUpgradesRow">
-              <button disabled={props.getUpgradeCount("fireUpgradeR2C1") == 18} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C1") && props.addValue("flameburstChance", 0.05)} >
+              <button disabled={props.getUpgradeCount("fireUpgradeR2C1") == 18} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C1")} >
                     <h3>Flameburst</h3>
                     <p>% Chance to increase production every tick</p>
                     <h5>Current: {props.getUpgradeCount("fireUpgradeR2C1") * 5 + (props.getUpgradeCount("fireUpgradeR2C1") > 0 ? 10 : 0)} %</h5>
@@ -46,18 +59,18 @@ function UpgradesTab(props) {
 
               </button>
 
-              <button  className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C2") && props.addValue("flameburstMult", props.getValue("flameburstMult") / 5)} >
+              <button  className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C2")} >
                     <h3>Flameburst II</h3>
                     <p>Increase Flamebursts Production Multiplier</p>
-                    <h5>Current: {props.formatValues(props.getValue("flameburstMult"))}x</h5>
+                    <h5>Current: {props.formatValues(new Decimal(1.5).pow(props.getUpgradeCount("fireUpgradeR2C2")).times(10))}x</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("fireUpgradeR2C2")[0].ceil())} {props.getUpgradeCost("fireUpgradeR2C2")[1]}</h4>
 
               </button>
 
-              <button disabled={props.getUpgradeCount("fireUpgradeR2C3") == 1} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C3") && props.addValue("flameburstLength", .15)} >
+              <button disabled={props.getUpgradeCount("fireUpgradeR2C3") == 5} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C3")} >
                     <h3>Flameburst III</h3>
-                    <p>Flameburst lasts longer and can stack</p>
-                    <h5>Current: {props.formatValues(props.getValue("flameburstLength"))} seconds</h5>
+                    <p>Flameburst happens multiple time per tick and can stack</p>
+                    <h5>Current: {props.getUpgradeCount("fireUpgradeR2C3") + 1} {(props.getUpgradeCount("fireUpgradeR2C3") + 1) > 1 ? "times" : "time"}</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("fireUpgradeR2C3")[0])} {props.getUpgradeCost("fireUpgradeR2C3")[1]}</h4>
 
               </button>
@@ -65,13 +78,19 @@ function UpgradesTab(props) {
             </div>
 
             <div className="fireUpgradesRow">
-            <button className='Upgrade' onClick={() => props.buyUpgrade("fireRepeatable")} >
-                  <h3>Blazing Inferno</h3>
-                  <p>Multiply Fire Gain by 2x</p>
-                  <h3>{props.getUpgradeCount("fireRepeatable")}</h3>
-                  <h4>Cost: {props.formatValues(props.getUpgradeCost("fireRepeatable")[0])} {props.getUpgradeCost("fireRepeatable")[1]}</h4>
-              
-              </button>
+              <div className="autobuyerHolder">
+                <button className='Upgrade' onClick={() => props.buyUpgrade("fireRepeatable")} >
+                      <h3>Blazing Inferno</h3>
+                      <p>Multiply Fire Gain by 2x</p>
+                      <h3>{props.formatValues(new Decimal(2).pow(props.getUpgradeCount("fireRepeatable")))}x</h3>
+                      <h4>Cost: {props.formatValues(props.getUpgradeCost("fireRepeatable")[0])} {props.getUpgradeCost("fireRepeatable")[1]}</h4>
+                  
+                  </button>
+
+                  <button className="autobuyer" onClick={() => buyMax("fireRepeatable")}>
+                    <h4>Buy Max</h4>
+                  </button>
+                </div>
             </div>
 
         </div>
@@ -97,7 +116,7 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
                   <h3>Fluidic Flow</h3>
                   <p>Autobuyer buys a water generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -120,6 +139,7 @@ function UpgradesTab(props) {
                     <h3>Ignited Hydration</h3>
                     <p>Gain 1% of your water production as fire</p>
                     <h5> &nbsp;</h5>
+                    
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("waterUpgradeR2C2")[0])} {props.getUpgradeCost("waterUpgradeR2C2")[1]}</h4>
 
               </button>
@@ -135,13 +155,19 @@ function UpgradesTab(props) {
             </div>
 
             <div className="waterUpgradesRow">
-            <button className='Upgrade' onClick={() => props.buyUpgrade("waterRepeatable")} >
-                  <h3>Hydroburst</h3>
-                  <p>Multiply water Gain by 2x</p>
-                  <h3>{props.getUpgradeCount("waterRepeatable")}</h3>
-                  <h4>Cost: {props.formatValues(props.getUpgradeCost("waterRepeatable")[0])} {props.getUpgradeCost("waterRepeatable")[1]}</h4>
-              
-              </button>
+              <div className="autobuyerHolder">
+                <button className='Upgrade' onClick={() => props.buyUpgrade("waterRepeatable")} >
+                      <h3>Hydroburst</h3>
+                      <p>Multiply water Gain by 2x</p>
+                      <h3>{props.formatValues(new Decimal(2).pow(props.getUpgradeCount("waterRepeatable")))}x</h3>
+                      <h4>Cost: {props.formatValues(props.getUpgradeCost("waterRepeatable")[0])} {props.getUpgradeCost("waterRepeatable")[1]}</h4>
+                  
+                  </button>
+
+                  <button className="autobuyer" onClick={() => buyMax("waterRepeatable")}>
+                    <h4>Buy Max</h4>
+                  </button>
+                </div>
             </div>
 
         </div>
@@ -169,7 +195,7 @@ function UpgradesTab(props) {
               
 
 
-              <button disabled={props.getUpgradeCount("earthUpgradeR1C3") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C3")} >
                   <h3>Geomagnetic</h3>
                   <p>Autobuyer buys an earth generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -206,13 +232,19 @@ function UpgradesTab(props) {
             </div>
 
             <div className="earthUpgradesRow">
-            <button className='Upgrade' onClick={() => props.buyUpgrade("earthRepeatable")} >
-                  <h3>Terraquake</h3>
-                  <p>Multiply Earth Gain by 2x</p>
-                  <h3>{props.getUpgradeCount("earthRepeatable")}</h3>
-                  <h4>Cost: {props.formatValues(props.getUpgradeCost("earthRepeatable")[0])} {props.getUpgradeCost("earthRepeatable")[1]}</h4>
-              
-              </button>
+              <div className="autobuyerHolder">
+                <button className='Upgrade' onClick={() => props.buyUpgrade("earthRepeatable")} >
+                      <h3>Terraquake</h3>
+                      <p>Multiply Earth Gain by 2x</p>
+                      <h3>{props.formatValues(new Decimal(2).pow(props.getUpgradeCount("earthRepeatable")))}x</h3>
+                      <h4>Cost: {props.formatValues(props.getUpgradeCost("earthRepeatable")[0])} {props.getUpgradeCost("earthRepeatable")[1]}</h4>
+                  
+                  </button>
+
+                  <button className="autobuyer" onClick={() => buyMax("earthRepeatable")}>
+                    <h4>Buy Max</h4>
+                  </button>
+                </div>
             </div>
 
         </div>

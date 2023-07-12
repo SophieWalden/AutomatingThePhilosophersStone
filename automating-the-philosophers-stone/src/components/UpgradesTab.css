@@ -1,5 +1,16 @@
 
 
+.autobuyer{
+    height: 8vh !important;
+}
+
+.autobuyerHolder{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .UpgradesContainer{
     display: flex;
     justify-content: space-evenly;
