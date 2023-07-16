@@ -125,19 +125,28 @@ function GeneratorTab(props) {
     }
 
     if (props.getUpgradeCount("earthUpgradeR1C1") == 1){
-        newEarth = newEarth.times(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))));
+        newEarth = newEarth.times(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))));
     }
 
     if (earthR2C3prod[1] == "earth"){
         newEarth = newEarth.times(earthR2C3prod[0]);
     }
 
+    if (props.getChallengeValue("challengeTwoCompletions")){
+        newEarth = newEarth.times(getGeneratorAmount("earth"));
+    }
+
     newEarth = newEarth.times(new Decimal(2).pow(props.getUpgradeCount("earthRepeatable")))
 
-    props.addValue("earth", newEarth);
+    if (props.getChallengeValues("activeChallenge") == "challenge4"){
+        newEarth = newEarth.times(props.getValue("productionMult"))
+    }
 
+
+    props.addValue("earth", newEarth);
+    
     // Water
-    let newWater = getGeneratorAmount("water").times(props.getValue("waterGeneratorMult")).times(deltaTime);
+    let newWater = (getGeneratorAmount("water").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))).pow(props.getChallengeValue("challengeOneCompletions") * 0.2 + 1).times(deltaTime);
 
     if (props.getUpgradeCount("earthUpgradeR2C2") == 1){
         newWater = newWater.plus(newEarth.times(0.01));
@@ -150,7 +159,7 @@ function GeneratorTab(props) {
 
 
     if (props.getUpgradeCount("waterUpgradeR1C1")){
-        newWater = newWater.times(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult")).plus(1))
+        newWater = newWater.times(props.getValue("waterGeneratorAmount").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))).plus(1))
     }
 
     if (props.getUpgradeCount("waterUpgradeR2C1")){
@@ -168,6 +177,9 @@ function GeneratorTab(props) {
         newWater = newWater.times(earthR2C3prod[0]);
     }
 
+    if (props.getChallengeValues("activeChallenge") == "challenge4"){
+        newWater = newWater.times(props.getValue("productionMult"))
+    }
 
     props.addValue("water", newWater);
 
@@ -216,6 +228,10 @@ function GeneratorTab(props) {
         newFire = newFire.times(earthR2C3prod[0]);
     }
 
+    if (props.getChallengeValues("activeChallenge") == "challenge4" || props.getChallengeValues("activeChallenge") == "challenge6"){
+        newFire = newFire.times(props.getValue("productionMult"))
+    }
+
     props.addValue("fire", newFire);
 
     // Autobuyers
@@ -240,9 +256,10 @@ function GeneratorTab(props) {
     else if ((props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("water")){
         buyGenerator("water")
     }
- 
+
 
   }
+
 
   // Call update every 33 ms (update time)
   React.useEffect(() => {
@@ -258,13 +275,49 @@ function GeneratorTab(props) {
     props.getUpgradeCount("earthUpgradeR2C1"), props.getUpgradeCount("earthUpgradeR2C2"), props.getUpgradeCount("earthUpgradeR2C3"), props.getUpgradeCount("fireUpgradeR1C1"), props.getValue("air"), props.getValue("airGeneratorAmount")
             ,])
     
+    let challengeDisplayNames = {"challenge1": "Challenge 1", "challenge2": "Challenge 2","challenge3": "Challenge 3", "challenge4": "Challenge 4", "challenge5": "Challenge 5", "challenge6": "Challenge 6", "challenge7": "Challenge 7"}
+
+    function formatDate(milliseconds){
+        let time = {"hours": 0, "minutes": 0, "seconds": 0};
+
+        while (milliseconds > 60 * 60 * 1000){
+            milliseconds -= 60 * 60 * 1000;
+            time["hours"] += 1;
+        }
+
+        while (milliseconds > 60 * 1000){
+            milliseconds -= 60 * 1000;
+            time["minutes"] += 1;
+        }
+    
+        time["seconds"] = Math.floor(milliseconds / 1000)
+        
+        let returnVal = "";
+
+        if (time["hours"] != 0) returnVal += `${time["hours"]} hours`
+
+        if (time["minutes"] != 0){
+            if (returnVal != "") returnVal += ", ";
+            returnVal += `${time["minutes"]} minutes`
+        }
+
+        if (returnVal != ""){
+            returnVal += ", and ";
+        }
+
+        returnVal += `${time["seconds"]} seconds`;
+
+        return returnVal
+    }
 
   return (
     
     <div className="GeneratorContainer">
-        
+        <h3 className={props.getChallengeValues("activeChallenge") == "" ? "notUnlocked":  ""}>You are in {challengeDisplayNames[props.getChallengeValues("activeChallenge")]}</h3>
+        <h3 className={props.getChallengeValues("activeChallenge") == "" ? "notUnlocked":  ""}>You have been in this challenge for {formatDate(Date.now() - props.getChallengeValues("timeOfStartChallenge"))}</h3>
+
         <div id="GeneratorsfirstRow">
-            <button className="Generator" id="fireGenerator" onClick={() => buyGenerator("fire")}>
+            <button disabled={["challenge1", "challenge2"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className="Generator" id="fireGenerator" onClick={() => buyGenerator("fire")}>
                 <h3>Fire Generator</h3>
                 <p>You have {props.formatValues(props.getValue("fire"), true)} Fire</p>
                 <h3>{props.formatValues(props.getValue("fireGeneratorAmount"))}</h3>
@@ -272,15 +325,15 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button className="Generator" id="waterGenerator" onClick={() => buyGenerator("water")}>
+            <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className="Generator" id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
-                <h3>{props.formatValues((props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))))}</h3>
+                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
                 <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
             </button>
 
-            <button className="Generator" id="earthGenerator" onClick={() => buyGenerator("earth")}>
+            <button disabled={["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className="Generator" id="earthGenerator" onClick={() => buyGenerator("earth")}>
                 <h3>Earth Generator</h3>
                 <p>You have {props.formatValues(props.getValue("earth"), true)} Earth</p>
                 <h3>{props.formatValues(props.getValue("earthGeneratorAmount"))}</h3>

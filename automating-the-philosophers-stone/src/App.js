@@ -54,6 +54,10 @@ function App() {
   let [maxEarth, setMaxEarth] = useState(new Decimal(0));
   let [maxFire, setMaxFire] = useState(new Decimal(0));
   let [maxAir, setMaxAir] = useState(new Decimal(0));
+
+  // Extra Challenge Values
+  let [productionMult, setProductionMult] = useState(new Decimal(1));
+
   
 
   function formatValues(value, decimalMode){
@@ -77,13 +81,13 @@ function App() {
     return value.toExponential(2).toString().replace("+","");
   }
 
-  let valueGetters = {"maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  let valueGetters = {"productionMult": productionMult, "maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount, "waterGeneratorAmount": waterGeneratorAmount, "earthGeneratorAmount": earthGeneratorAmount, "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
   
   function getValue(name){
     return valueGetters[name];
   }
 
-  let valueSetters = {"maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"productionMult": setProductionMult, "maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
   function setValue(name, value){
     valueSetters[name](value);
@@ -187,13 +191,48 @@ function App() {
                  "earthUpgradeR1C1": [new Decimal(5), "energy"],"earthUpgradeR1C2": [new Decimal(10), "energy"],"earthUpgradeR1C3": [new Decimal(25), "energy"],
                  "earthUpgradeR2C1": [new Decimal(15), "energy"], "earthUpgradeR2C2": [new Decimal(20), "energy"], "earthUpgradeR2C3": [new Decimal(40), "energy"]}
 
-    return costs[upgrade]
+    let costMult = 1;
+    if (activeChallenge == "challenge3"){
+      costMult = costMult * 2;
+    }
+
+    let cost = costs[upgrade];
+    cost[0] = cost[0].times(costMult);
+
+    return cost
   }
 
   function resetAllUpgrades(){
     for (const upgrade in setters){
       setters[upgrade](0);
     }
+  }
+
+  // Challenges
+  let [activeChallenge, setActiveChallenge] = useState("")
+  let [challengeOneCompletions, setChallengeOneCompletions] = useState(0);
+  let [challengeTwoCompletions, setChallengeTwoCompletions] = useState(0);
+  let [challengeThreeCompletions, setChallengeThreeCompletions] = useState(0);
+  let [challengeFourCompletions, setChallengeFourCompletions] = useState(0);
+  let [challengeFiveCompletions, setChallengeFiveCompletions] = useState(0);
+  let [challengeSixCompletions, setChallengeSixCompletions] = useState(0);
+  let [challengeSevenCompletions, setChallengeSevenCompletions] = useState(0);
+  let [saveBeforeChallenge, setSaveBeforeChallenge] = useState("");
+  let [timeOfStartChallenge, setTimeOfStartChallenge] = useState(Date.now());
+
+  let challengeGetters = {"timeOfStartChallenge": timeOfStartChallenge, "activeChallenge": activeChallenge, "saveBeforeChallenge": saveBeforeChallenge, "challengeOneCompletions": challengeOneCompletions, "challengeTwoCompletions": challengeTwoCompletions, "challengeThreeCompletions": challengeThreeCompletions,
+                          "challengeFourCompletions": challengeFourCompletions, "challengeFiveCompletions": challengeFiveCompletions, "challengeSixCompletions": challengeSixCompletions, "challengeSevenCompletions": challengeSevenCompletions}
+
+  let challengeSetters= {"timeOfStartChallenge": setTimeOfStartChallenge, "activeChallenge": setActiveChallenge, "saveBeforeChallenge": setSaveBeforeChallenge, "challengeOneCompletions": setChallengeOneCompletions, "challengeTwoCompletions": setChallengeTwoCompletions, "challengeThreeCompletions": setChallengeThreeCompletions,
+  "challengeFourCompletions": setChallengeFourCompletions, "challengeFiveCompletions": setChallengeFiveCompletions, "challengeSixCompletions": setChallengeSixCompletions, "challengeSevenCompletions": setChallengeSevenCompletions}
+
+
+  function getChallengeValues(name){
+    return challengeGetters[name]
+  }
+
+  function setChallengeValues(name, value){
+    challengeSetters[name](value);
   }
 
 
@@ -240,16 +279,29 @@ function App() {
     }
   }
 
+  function updateChallengeModifiers(){
+    if (activeChallenge == "challenge4"){ // Half production every minute
+      setProductionMult(mult => mult.dividedBy(1.0005))
+    }
+
+    if (activeChallenge == "challenge6"){
+      if (Date.now() - timeOfStartChallenge >= 2 * 60 * 1000){
+        setProductionMult(mult => mult.dividedBy(2));
+      }
+    }
+  }
+
   // Call update every 33 ms (update time)
   React.useEffect(() => {
     const interval = setInterval(() => {
         calculateNewEnergy();
         calculateTimeSinceLastReset();
         updateMaxValues();
+        updateChallengeModifiers();
     }, 33);
     
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-}, [energy, fire, water, earth, lastResetTime])
+}, [energy, fire, water, earth, lastResetTime, timeOfStartChallenge])
 
   
   return (
@@ -258,7 +310,7 @@ function App() {
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy)}</span> Energy</h2>
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy.minus(spentEnergy))}</span> unspent Energy</h2>
 
-      <TabManager setUpgrade={setUpgrade} resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
+      <TabManager getChallengeValue={getChallengeValues} setChallengeValue={setChallengeValues} setUpgrade={setUpgrade} resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
     </div>
   );
 }

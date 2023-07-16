@@ -103,7 +103,7 @@ function UpgradesTab(props) {
               <button disabled={props.getUpgradeCount("waterUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C1")} >
                   <h3>Surge</h3>
                   <p>Gain water production multiplier equal to Water Generator Count + 1</p>
-                  <h5>Current {props.getValue("waterGeneratorAmount") * (props.getValue("waterGeneratorMult")) + 1}x</h5>
+                  <h5>Current {props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}x</h5>
                   <h4>Cost: {props.formatValues(props.getUpgradeCost("waterUpgradeR1C1")[0])} {props.getUpgradeCost("waterUpgradeR1C1")[1]}</h4>
 
               </button>
@@ -144,7 +144,7 @@ function UpgradesTab(props) {
 
               </button>
 
-              <button disabled={props.getUpgradeCount("waterUpgradeR2C3") == 3} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR2C3") && props.setValue("waterGeneratorMult", props.getValue("waterGeneratorMult").times(3))} >
+              <button disabled={props.getUpgradeCount("waterUpgradeR2C3") == 3} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR2C3")} >
                     <h3>Primoridal Flood</h3>
                     <p>Multiply Effective Water Generator count by 3</p>
                     <h5>Current: {3 ** props.getUpgradeCount("waterUpgradeR2C3")}x</h5>
@@ -180,7 +180,7 @@ function UpgradesTab(props) {
             <button disabled={props.getUpgradeCount("earthUpgradeR1C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C1")} >
                     <h3>Hearth Home</h3>
                     <p>Increase production based on total generator count</p>
-                    <h5>Current: {props.formatValues(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult"))))}x</h5>
+                    <h5>Current: {props.formatValues(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))))}x</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("earthUpgradeR1C1")[0])} {props.getUpgradeCost("earthUpgradeR1C1")[1]}</h4>
 
               </button>

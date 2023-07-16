@@ -37,6 +37,16 @@ Once you have 100 fire you unlock water, as you need one element to kickstart th
 
 7 Challenges which are each of the 7 alchemical metals.
 
+Each of the alchemical metals also correspond to a planet, which I can write a blurb about in the challenge.
 
+What should each challenge be? 
 
+Energy is reset in challenges, but you keep your energy mult
 
+Lead (Saturn): Lead melts at 621 degrees Farenheit, thats quite hot already! Get to a certain water goal without using fire to cool it down.
+Tin (Jupiter): No one likes Tin, maybe we can bury it in dirt and forget about it, reach a certain earth amount with the other elements disabled because we need to focus on burying tin
+Iron (Mars): You cant make steel without iron and you know what really has been a steal? These shop prices! Shop prices are doubled
+Silver (Moon): Silver has a halflife of 439 years, but just for you we can accelerate it to 1 minute! Production is halved every minute.
+Copper (Venus): The statue of liberty is made from 179,000 pounds of copper, 
+Quicksilver (Mercury): Quicksilver is named for its speed, but surely you can do faster, get to an energy goal within 2 minutes to get away from it fast.
+Gold (Sun): Final Challenge: Energy mult is square rooted, all production is square rooted aswell, after all looking into the sun is a self inflicting act

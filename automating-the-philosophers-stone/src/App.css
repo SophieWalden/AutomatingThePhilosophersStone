@@ -6,6 +6,10 @@ button{
   color: black;
 }
 
+.dontShowChallenge{
+  display: none !important;
+}
+
 .ResourceDisplay{
   height: 5vh;
 

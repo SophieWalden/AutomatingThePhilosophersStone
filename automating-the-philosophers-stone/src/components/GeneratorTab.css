@@ -1,6 +1,6 @@
 
 .notUnlocked{
-    display: none;
+    display: none !important;
 }
 
 #GeneratorsfirstRow,
@@ -32,6 +32,12 @@
     font-size: 1.0vw;
 }
 
+#fireGenerator:disabled,
+#fireGenerator[disabled]{
+    background-color: #803141 !important;
+}
+
+
 #fireGenerator{
     background-color: #a43f53;
     border: #53354A solid 2px;
@@ -42,6 +48,12 @@
     background-color: #903749;
 }
 
+#waterGenerator:disabled,
+#waterGenerator[disabled]{
+    background-color: #244E92 !important;
+}
+
+
 #waterGenerator{
     background-color: #326ecd;
     border: #53354A solid 2px;
@@ -50,6 +62,11 @@
 
 #waterGenerator:hover{
     background-color: #2d62b7;
+}
+
+#earthGenerator:disabled,
+#earthGenerator[disabled]{
+    background-color: #7E5B1C !important;
 }
 
 #earthGenerator{

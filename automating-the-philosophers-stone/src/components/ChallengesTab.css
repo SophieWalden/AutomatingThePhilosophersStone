@@ -1,0 +1,59 @@
+
+.ChallengeCompleted{
+    background-color: #6A883C !important;
+}
+
+#challengeSelector{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#challengeSelector button{
+    width: 10vw;
+    height: 10vh;
+    background-color: #4a472b;
+    border: solid 2px #302e1c; 
+    font-size: 0.8vw;
+}
+
+#challengeSelector button:hover{
+    background-color: #393723;
+}
+
+.challengeDisabled{
+    display: none !important;
+}
+
+#challengeStartDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#challengeStartDiv button{
+    width: 15vw;
+    height: 15vh;
+    font-size: 1.5vw;
+    background-color: #6c6842;
+    border: solid 2px #393723; 
+}
+
+#challengeStartDiv button:hover{
+
+    background-color: #4a472b;
+}
+
+
+
+.challengeDescription{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.challengeDescription p{
+    width: 80vw;
+}
