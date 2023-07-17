@@ -142,6 +142,11 @@ function GeneratorTab(props) {
         newEarth = newEarth.times(props.getValue("productionMult"))
     }
 
+    if (props.getChallengeValue("challengeSixCompletions")){
+        newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
+    }
+
+    if (props.getChallengeValue("activeChallenge") == "challenge7") newEarth = newEarth.pow(0.5);
 
     props.addValue("earth", newEarth);
     
@@ -180,6 +185,12 @@ function GeneratorTab(props) {
     if (props.getChallengeValues("activeChallenge") == "challenge4"){
         newWater = newWater.times(props.getValue("productionMult"))
     }
+
+    if (props.getChallengeValue("challengeSixCompletions")){
+        newWater = newWater.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
+    }
+
+    if (props.getChallengeValue("activeChallenge") == "challenge7") newWater = newWater.pow(0.5);
 
     props.addValue("water", newWater);
 
@@ -232,7 +243,30 @@ function GeneratorTab(props) {
         newFire = newFire.times(props.getValue("productionMult"))
     }
 
+    if (props.getChallengeValue("challengeSixCompletions")){
+        newFire = newFire.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
+    }
+
+    if (props.getChallengeValue("activeChallenge") == "challenge7") newFire = newFire.pow(0.5);
+
     props.addValue("fire", newFire);
+
+    // Space
+    let newSpace = props.getValue("spaceGeneratorAmount").times(deltaTime)
+
+    newSpace = new Decimal(1.2).pow(newSpace).times(props.getValue("spaceGeneratorAmount"))
+
+    if (props.getChallengeValue("activeChallenge") == "challenge7") newSpace = newSpace.pow(0.5);
+
+    props.addValue("space", newSpace)
+
+    // Aether
+
+    let newAether = props.getValue("aetherGeneratorAmount").times(deltaTime)
+
+    if (props.getChallengeValue("activeChallenge") == "challenge7") newAether = newAether.pow(0.5);
+
+    props.addValue("aether", newAether.pow(0.5))
 
     // Autobuyers
     if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
@@ -325,7 +359,7 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className="Generator" id="waterGenerator" onClick={() => buyGenerator("water")}>
+            <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("energy") >= 3 || props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
                 <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
@@ -333,7 +367,7 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button disabled={["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className="Generator" id="earthGenerator" onClick={() => buyGenerator("earth")}>
+            <button disabled={["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="earthGenerator" onClick={() => buyGenerator("earth")}>
                 <h3>Earth Generator</h3>
                 <p>You have {props.formatValues(props.getValue("earth"), true)} Earth</p>
                 <h3>{props.formatValues(props.getValue("earthGeneratorAmount"))}</h3>
@@ -343,7 +377,7 @@ function GeneratorTab(props) {
             
         </div>
         <div id="GeneratorssecondRow">
-            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.5) ? "" : "notUnlocked"}`} id="airGenerator" onClick={() => buyGenerator("air")}>
+            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) ? "" : "notUnlocked"}`} id="airGenerator" onClick={() => buyGenerator("air")}>
                 <h3>Air Generator</h3>
                 <p>You have {props.formatValues(props.getValue("air"), true)} Air, giving a {props.formatValues(props.getValue("air").plus(1), true)}x Multiplier to all previous generators</p>
                 <h3>{props.formatValues(props.getValue("airGeneratorAmount"))}</h3>
@@ -351,15 +385,15 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(50) ? "" : "notUnlocked"}`} id="spaceGenerator" onClick={() => buyGenerator("space")}>
+            <button className={`Generator ${props.getChallengeValue("challengeFourCompletions") ? "" : "notUnlocked"}`} id="spaceGenerator" onClick={() => buyGenerator("space")}>
                 <h3>Space Generator</h3>
-                <p>You have {props.formatValues(props.getValue("space"))} Space</p>
+                <p>You have {props.formatValues(props.getValue("space"))} Space, adding +{props.formatValues(props.getValue("space"))} to every generator amount</p>
                 <h3>{props.formatValues(props.getValue("spaceGeneratorAmount"))}</h3>
                 <h4>Cost: {props.formatValues(getCost("space"))} {props.getValue("spaceGeneratorAmount") > 0 ? "space" : "energy"}</h4>
             
             </button>
 
-            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(70) ? "" : "notUnlocked"}`} id="aetherGenerator" onClick={() => buyGenerator("aether")}>
+            <button className={`Generator ${props.getChallengeValue("challengeSevenCompletions") ? "" : "notUnlocked"}`} id="aetherGenerator" onClick={() => buyGenerator("aether")}>
                 <h3>Aether Generator</h3>
                 <p>You have {props.formatValues(props.getValue("aether"))} Aether</p>
                 <h3>{props.formatValues(props.getValue("aetherGeneratorAmount"))}</h3>

@@ -97,10 +97,10 @@ function TabManager(props) {
       <div id="tabList">
 
         <button onClick={() => setTab('Generators')}>Generators</button>
-        <button onClick={() => setTab('Upgrades')}>Upgrades</button>
+        <button className={props.getValue("maxFire") >= 5 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Upgrades')}>Upgrades</button>
         <button onClick={() => setTab('Formulas')}>Formula</button>
-        <button onClick={() => setTab('Philosophers')}>Philosophers</button>
-        <button onClick={() => setTab('Challenges')}>Challenges</button>
+        <button className={props.getValue("energy") >= 8 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Philosophers')}>Philosophers</button>
+        <button className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(15) ? "" : "notUnlocked"} onClick={() => setTab('Challenges')}>Challenges</button>
         <button onClick={() => setTab('Options')}>Options</button>
 
       </div>
@@ -110,7 +110,7 @@ function TabManager(props) {
                 getValue={props.getValue} setValue={props.setValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount}/></div>
         <div className={tab!=="Upgrades" ? "hiddenTab" : undefined}><UpgradesTab getChallengeValue={props.getChallengeValue} setValue={props.setValue} getValue={props.getValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount} buyUpgrade={props.buyUpgrade} getUpgradeCost={props.getUpgradeCost}/></div>
         <div className={tab!=="Philosophers" ? "hiddenTab" : undefined}><PhilosophersTab getChallengeValue={props.getChallengeValue} resetAllUpgrades={props.resetAllUpgrades} addValue={props.addValue} setValue={props.setValue} formatValues={props.formatValues} getValue={props.getValue} getUpgradeCount={props.getUpgradeCount} getUpgradeCost={props.getUpgradeCost}/></div>
-        <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab getValue={props.getValue} setValue={props.setValue} exportGame={exportGame} importGame={importGame} getChallengeValue={props.getChallengeValue} setChallengeValue={props.setChallengeValue}/></div>
+        <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab formatValues={props.formatValues} getValue={props.getValue} setValue={props.setValue} exportGame={exportGame} importGame={importGame} getChallengeValue={props.getChallengeValue} setChallengeValue={props.setChallengeValue}/></div>
         <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab exportGame={exportGame} importGame={importGame} setUpgrade={props.setUpgrade} getUpgradeCount={props.getUpgradeCount} getValue={props.getValue} setValue={props.setValue} /></div>
         <div className={tab!=="Formulas" ? "hiddenTab" : undefined}><FormulaTab getValue={props.getValue} formatValues={props.formatValues}/></div>
       </div>

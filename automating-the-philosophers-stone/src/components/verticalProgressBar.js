@@ -10,8 +10,8 @@ const VerticalProgress = ({ progress }) => {
     <Spring from={{ percent: 0 }} to={{ percent: progress }}>
       {({ percent }) => (
         <div className="progress vertical">
-          <div style={{ height: `${5+(0.9*progress)}%` }} className="progress-bar">
-            <span className="sr-only">{`${Math.round(100 * ((0.9*progress))) / 100}%`}</span>
+          <div style={{ height: `${5+(0.95*(progress >= 100 ? 100 : progress))}%` }} className="progress-bar">
+            <span className="sr-only">{`${Math.round(100 * progress) / 100}%`}</span>
           </div>
         </div>
       )}

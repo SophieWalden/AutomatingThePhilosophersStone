@@ -147,3 +147,7 @@
     background-repeat: repeat;
     z-index: -1;
   }
+
+  .notUnlocked{
+    display: none !important; 
+  }

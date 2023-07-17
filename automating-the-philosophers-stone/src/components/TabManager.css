@@ -43,3 +43,8 @@
 #tabList button:hover{
     background-color: rgba(255,255,255,0.25);
 }
+
+
+.notUnlocked{
+    display: none !important;
+}
