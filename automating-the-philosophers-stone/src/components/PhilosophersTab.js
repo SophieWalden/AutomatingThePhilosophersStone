@@ -14,25 +14,17 @@ function PhilosophersTab(props) {
     props.setValue("spentEnergy", new Decimal(0));
 
     // Add to sacrifice total based on element amounts
-    let fireEnergyContribution = new Decimal(props.getValue("maxFire").plus(1).log(10)).floor(); 
-    let waterEnergyContribution = new Decimal(props.getValue("maxWater").plus(1).log(4)).floor(); 
-    let earthEnergyContribution = new Decimal(props.getValue("maxEarth").plus(1).log(2)).floor()
-    let airEnergyContribution = new Decimal(props.getValue("maxAir").plus(1).log(1.5)).floor()
-    let spaceEnergyContribution = new Decimal(props.getValue("maxSpace").plus(1).log(1.25)).floor()
-    let aetherEnergyContribution = new Decimal(props.getValue("maxAether").floor())
+    let elementTotal = getElementalTotal()
+    if (elementTotal.greaterThan(props.getValue("sacrificedTotal"))) props.setValue("sacrificedTotal", new Decimal(elementTotal));
 
-    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
-    props.setValue("sacrificedTotal", new Decimal(elementTotal))
-
-    let newEnergyMult = getNewEnergyMult();
-
-    props.setValue("energyMult", new Decimal(newEnergyMult) > props.getValue("energyMult") ? new Decimal(newEnergyMult) : props.getValue("energyMult"));
+    let newEnergyMult = getNewEnergyMult(elementTotal);
+    if (newEnergyMult.greaterThan(props.getValue("energyMult")))props.setValue("energyMult", newEnergyMult);
 
     props.setValue("fire", new Decimal(0));
     props.setValue("earth", new Decimal(0));
     props.setValue("water", new Decimal(0));
 
-    if (!(props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(12))){
+    if (!(props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C1")) || props.getChallengeValue("activeChallenge") != "")){
         props.setValue("air", new Decimal(0));
         props.setValue("airGeneratorAmount", new Decimal(0));
     } 
@@ -55,7 +47,7 @@ function PhilosophersTab(props) {
    
   }
 
-  function getNewEnergyMult(){
+  function getElementalTotal(){
     let fireEnergyContribution = new Decimal(props.getValue("maxFire").plus(1).log(10)).floor(); 
     let waterEnergyContribution = new Decimal(props.getValue("maxWater").plus(1).log(4)).floor(); 
     let earthEnergyContribution = new Decimal(props.getValue("maxEarth").plus(1).log(2)).floor()
@@ -63,11 +55,15 @@ function PhilosophersTab(props) {
     let spaceEnergyContribution = new Decimal(props.getValue("maxSpace").plus(1).log(1.25)).floor()
     let aetherEnergyContribution = new Decimal(props.getValue("maxAether").floor())
 
-    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
+    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution).times(10);
 
-    let newEnergyMult = new Decimal(1.015).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
+    return elementTotal
+  }
+
+  function getNewEnergyMult(elementTotal){
+    let newEnergyMult = new Decimal(1.004).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
     if (props.getChallengeValue("challengeThreeCompletions")){
-      newEnergyMult = new Decimal(1.05).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
+      newEnergyMult = new Decimal(1.01).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
     }
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newEnergyMult = newEnergyMult.pow(0.5);
@@ -90,7 +86,7 @@ function PhilosophersTab(props) {
         <button id="philosophyResetButton" onClick={ResetEnergy}>Reset!</button>
         <h3>Reset everything, but keep your energy and get an energy mult</h3>
 
-        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(getNewEnergyMult())}x</h3>
+        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(getNewEnergyMult(getElementalTotal()))}x</h3>
       </div>
       <div>
 
@@ -98,36 +94,36 @@ function PhilosophersTab(props) {
             <h3>Milestones</h3>
             <div className="milestonesRow">
 
-            <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.35) ? "unlocked" : ""} >
+            <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C1")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                   <h3>Upgrade!!</h3>
                   <p>Unlock all row 2 elemental upgrades (9 more)</p>
-                  <h4>Unlocks at 0.35% Filled</h4>
+                  <h4>Unlocks at {props.getValue("philosopherR1C1").toNumber()}% Filled</h4>
 
               </button>
 
 
 
-                <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) ? "unlocked" : ""} >
+                <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C2")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                     <h3>Arid Production</h3>
                     <p>Unlocks the air generator!</p>
-                    <h4>Unlocks at 2.5% Filled</h4>
+                    <h4>Unlocks at {props.getValue("philosopherR1C2").toNumber()}% Filled</h4>
 
               </button>
               
             </div>
 
             <div className="milestonesRow">
-            <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) ? "unlocked" : ""} >
+            <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                 
                 <h3>Robot Takeover</h3>
                 <p>All basic autobuyer upgrades are permentaly on without costing energy</p>
-                <h4>Unlocks at 5% Filled</h4>
+                <h4>Unlocks at {props.getValue("philosopherR2C1").toNumber()}% Filled</h4>
 
             </button>
-              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(7) ? "unlocked" : ""} >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                   <h3>Hassle Ender</h3>
                   <p>Unlock an autobuyer that automatically buys 2x upgrades</p>
-                  <h4>Unlocks at 7% Filled</h4>
+                  <h4>Unlocks at {props.getValue("philosopherR2C2").toNumber()}% Filled</h4>
 
               </button>
 
@@ -136,17 +132,17 @@ function PhilosophersTab(props) {
             </div>
 
             <div className="milestonesRow">
-              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(12) ? "unlocked" : ""} >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C1")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                   <h3>Fanning it out</h3>
                   <p>Air amount no longer resets on resets</p>
-                  <h4>Unlocks at 12% Filled</h4>
+                  <h4>Unlocks at {props.getValue("philosopherR3C1").toNumber()}% Filled</h4>
 
               </button>
 
-              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(15) ? "unlocked" : ""} >
+              <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C2")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                   <h3>Challengers</h3>
                   <p>Unlock challenges, difficult adventures with great rewards!</p>
-                  <h4>Unlocks at 15% Filled</h4>
+                  <h4>Unlocks at {props.getValue("philosopherR3C2").toNumber()}% Filled</h4>
 
               </button>
 

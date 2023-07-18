@@ -78,27 +78,27 @@ function ChallengesTab(props) {
             <h2>Challenge 1: ♄</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeTwoCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge2")}>
+          <button className={`${props.getChallengeValue("challengeTwoCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeOneCompletions") == 1 ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge2")}>
             <h2>Challenge 2: ♃</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeThreeCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge3")}>
+          <button className={`${props.getChallengeValue("challengeThreeCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeOneCompletions") == 1 ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge3")}>
             <h2>Challenge 3: ♂</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeFourCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge4")}>
+          <button className={`${props.getChallengeValue("challengeFourCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeTwoCompletions") == 1  || props.getChallengeValue("challengeThreeCompletions") == 1 ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge4")}>
             <h2>Challenge 4: ☽</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeFiveCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge5")}>
+          <button className={`${props.getChallengeValue("challengeFiveCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeTwoCompletions") == 1  || props.getChallengeValue("challengeThreeCompletions") == 1 ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge5")}>
             <h2>Challenge 5: ♀</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeSixCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge6")}>
+          <button className={`${props.getChallengeValue("challengeSixCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeFourCompletions") == 1  || props.getChallengeValue("challengeFiveCompletions") == 1  ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge6")}>
             <h2>Challenge 6: ☿</h2>
           </button>
 
-          <button className={props.getChallengeValue("challengeSevenCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge7")}>
+          <button className={`${props.getChallengeValue("challengeSevenCompletions")==1 ? "ChallengeCompleted" : ""} ${props.getChallengeValue("challengeFiveCompletions") == 1 &&  props.getChallengeValue("challengeSixCompletions") == 1  ? "" : "notUnlocked"}`} onClick={() => setChallenge("challenge7")}>
             <h2>Challenge 7: ☼</h2>
           </button>
         </div>
@@ -169,7 +169,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e5 Energy</h4>
-                <h3>Reward: Energy Multiplier formula improved (1.01^(Energy without mult) -&gt; 1.05^(Energy without mult))</h3>
+                <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; 1.01^(Energy without mult))</h3>
 
               </div>
 

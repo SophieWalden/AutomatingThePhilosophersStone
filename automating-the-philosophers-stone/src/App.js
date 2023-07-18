@@ -74,8 +74,14 @@ function App() {
 
   // Unlocking Stats
   let [firstReset, setFirstReset] = useState(true);
-  
 
+  // Philosopher Unlocks (5 = unlocks at 5%)
+  let [philosopherR1C1, setPhilosopherR1C1] = useState(new Decimal(3.5));
+  let [philosopherR1C2, setPhilosopherR1C2] = useState(new Decimal(10));
+  let [philosopherR2C1, setPhilosopherR2C1] = useState(new Decimal(15));
+  let [philosopherR2C2, setPhilosopherR2C2] = useState(new Decimal(20));
+  let [philosopherR3C1, setPhilosopherR3C1] = useState(new Decimal(30));
+  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(40));
 
   function formatValues(value, decimalMode){
 
@@ -98,13 +104,13 @@ function App() {
     return value.toExponential(2).toString().replace("+","");
   }
 
-  let valueGetters = {"firstReset": firstReset, "maxSpace": maxSpace, "maxAether": maxAether, "productionMult": productionMult, "maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount.plus(space).pow(challengeFiveCompletions == 1 ? 2 : 1), "waterGeneratorAmount": waterGeneratorAmount.plus(space), "earthGeneratorAmount": earthGeneratorAmount.plus(space), "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  let valueGetters = {"philosopherR3C1": philosopherR3C1, "philosopherR3C2": philosopherR3C2, "philosopherR2C1": philosopherR2C1, "philosopherR2C2": philosopherR2C2, "philosopherR1C1": philosopherR1C1, "philosopherR1C2": philosopherR1C2, "firstReset": firstReset, "maxSpace": maxSpace, "maxAether": maxAether, "productionMult": productionMult, "maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount.plus(space).pow(challengeFiveCompletions == 1 ? 2 : 1), "waterGeneratorAmount": waterGeneratorAmount.plus(space), "earthGeneratorAmount": earthGeneratorAmount.plus(space), "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
   
   function getValue(name){
     return valueGetters[name];
   }
 
-  let valueSetters = {"firstReset": setFirstReset, "maxSpace": setMaxSpace, "maxAether": setMaxAether, "productionMult": setProductionMult, "maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"philosopherR3C1": setPhilosopherR3C1, "philosopherR3C2": setPhilosopherR3C2, "philosopherR2C1": setPhilosopherR2C1, "philosopherR2C2": setPhilosopherR2C2, "philosopherR1C1": setPhilosopherR1C1, "philosopherR1C2": setPhilosopherR1C2, "firstReset": setFirstReset, "maxSpace": setMaxSpace, "maxAether": setMaxAether, "productionMult": setProductionMult, "maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
   function setValue(name, value){
     valueSetters[name](value);
@@ -253,6 +259,10 @@ function App() {
     energyValue = energyValue.plus(new Decimal(maxEarth.plus(1).log(2)).floor()); 
 
     energyValue = energyValue.plus(new Decimal(maxAir.plus(1).log(1.5)).floor()); 
+
+    energyValue = energyValue.plus(new Decimal(maxSpace.plus(1).log(1.25)).floor()); 
+
+    energyValue = energyValue.plus(new Decimal(maxAether).floor()); 
 
     energyValue = energyValue.times(energyMult).floor()
 

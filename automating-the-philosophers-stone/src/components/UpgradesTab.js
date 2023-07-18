@@ -41,7 +41,7 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) } className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") } className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR1C3")} >
                   <h3>Frequent Flamer</h3>
                   <p>Autobuyer buys a fire generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -50,7 +50,7 @@ function UpgradesTab(props) {
               </button>
             </div>
 
-            <div className={`fireUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.35) ? "" : "notUnlocked"}`}>
+            <div className={`fireUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C1")) || props.getChallengeValue("activeChallenge") ? "" : "notUnlocked"}`}>
               <button disabled={props.getUpgradeCount("fireUpgradeR2C1") == 18} className='Upgrade' onClick={() => props.buyUpgrade("fireUpgradeR2C1")} >
                     <h3>Flameburst</h3>
                     <p>% Chance to increase production every tick</p>
@@ -116,7 +116,7 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge")} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
                   <h3>Fluidic Flow</h3>
                   <p>Autobuyer buys a water generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -126,7 +126,7 @@ function UpgradesTab(props) {
               </button>
             </div>
 
-            <div className={`waterUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.35) ? "" : "notUnlocked"}`}>
+            <div className={`waterUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C1")) || props.getChallengeValue("activeChallenge") ? "" : "notUnlocked"}`}>
               <button disabled={props.getUpgradeCount("waterUpgradeR2C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR2C1")} >
                     <h3>Vapor Vortex</h3>
                     <p>Gain multiplier based on fire count</p>
@@ -195,7 +195,7 @@ function UpgradesTab(props) {
               
 
 
-              <button disabled={props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge")} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C3")} >
                   <h3>Geomagnetic</h3>
                   <p>Autobuyer buys an earth generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -204,7 +204,7 @@ function UpgradesTab(props) {
               </button>
             </div>
 
-            <div className={`earthUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(0.35) ? "" : "notUnlocked"}`}>
+            <div className={`earthUpgradesRow ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C1")) || props.getChallengeValue("activeChallenge") ? "" : "notUnlocked"}`}>
             <button disabled={props.getUpgradeCount("earthUpgradeR2C1") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR2C1")} >
                   <h3>Stable Growth</h3>
                   <p>Gain a multiplier that grows with gametime</p>

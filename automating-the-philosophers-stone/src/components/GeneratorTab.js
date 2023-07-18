@@ -57,6 +57,11 @@ function GeneratorTab(props) {
   }
 
   function canYouBuyGenerator(element){
+
+    if (element == "fire" && ["challenge1", "challenge2"].indexOf(props.getChallengeValues("activeChallenge")) != -1) return false;
+    if (element == "water" && ["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1) return false;
+    if (element == "earth" && ["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1) return false;
+
     let generatorAmount = getGeneratorAmount(element);
 
     // Buy With Energy
@@ -148,6 +153,8 @@ function GeneratorTab(props) {
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newEarth = newEarth.pow(0.5);
 
+    if (["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1) newEarth = new Decimal(0);
+
     props.addValue("earth", newEarth);
     
     // Water
@@ -191,6 +198,8 @@ function GeneratorTab(props) {
     }
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newWater = newWater.pow(0.5);
+
+    if (["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1) newWater = new Decimal(0);
 
     props.addValue("water", newWater);
 
@@ -249,6 +258,8 @@ function GeneratorTab(props) {
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newFire = newFire.pow(0.5);
 
+    if (["challenge1", "challenge2"].indexOf(props.getChallengeValues("activeChallenge")) != -1) newFire = new Decimal(0);
+
     props.addValue("fire", newFire);
 
     // Space
@@ -269,25 +280,25 @@ function GeneratorTab(props) {
     props.addValue("aether", newAether.pow(0.5))
 
     // Autobuyers
-    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
         props.buyUpgrade("fireRepeatable");
     }
-    else if ((props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("fire")){
+    else if ((props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("fire")){
         buyGenerator("fire");
     }
 
-    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("earth").greaterThanOrEqualTo(props.getUpgradeCost("earthRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("earth").greaterThanOrEqualTo(props.getUpgradeCost("earthRepeatable")[0])){
         props.buyUpgrade("earthRepeatable");
     }
-    else if ((props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("earth")){
+    else if ((props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("earth")){
         buyGenerator("earth")
     }
 
 
-    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(5) && props.getValue("water").greaterThanOrEqualTo(props.getUpgradeCost("waterRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("water").greaterThanOrEqualTo(props.getUpgradeCost("waterRepeatable")[0])){
         props.buyUpgrade("waterRepeatable");
     }
-    else if ((props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5)) && canYouBuyGenerator("water")){
+    else if ((props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("water")){
         buyGenerator("water")
     }
 
@@ -362,7 +373,7 @@ function GeneratorTab(props) {
             <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("energy") >= 3 || props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
-                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
+                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
                 <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
             </button>
@@ -377,7 +388,7 @@ function GeneratorTab(props) {
             
         </div>
         <div id="GeneratorssecondRow">
-            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(2.5) ? "" : "notUnlocked"}`} id="airGenerator" onClick={() => buyGenerator("air")}>
+            <button className={`Generator ${props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR1C2")) || props.getChallengeValue("activeChallenge") != "" ? "" : "notUnlocked"}`} id="airGenerator" onClick={() => buyGenerator("air")}>
                 <h3>Air Generator</h3>
                 <p>You have {props.formatValues(props.getValue("air"), true)} Air, giving a {props.formatValues(props.getValue("air").plus(1), true)}x Multiplier to all previous generators</p>
                 <h3>{props.formatValues(props.getValue("airGeneratorAmount"))}</h3>

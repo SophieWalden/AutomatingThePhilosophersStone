@@ -100,7 +100,7 @@ function TabManager(props) {
         <button className={props.getValue("maxFire") >= 5 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Upgrades')}>Upgrades</button>
         <button onClick={() => setTab('Formulas')}>Formula</button>
         <button className={props.getValue("energy") >= 8 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Philosophers')}>Philosophers</button>
-        <button className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(15) ? "" : "notUnlocked"} onClick={() => setTab('Challenges')}>Challenges</button>
+        <button className={(props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C2")) || props.getChallengeValue("activeChallenge") != "") != "" ? "" : "notUnlocked"} onClick={() => setTab('Challenges')}>Challenges</button>
         <button onClick={() => setTab('Options')}>Options</button>
 
       </div>
