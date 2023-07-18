@@ -55,9 +55,16 @@ function PhilosophersTab(props) {
     let spaceEnergyContribution = new Decimal(props.getValue("maxSpace").plus(1).log(1.25)).floor()
     let aetherEnergyContribution = new Decimal(props.getValue("maxAether").floor())
 
-    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution).times(10);
+    let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
 
-    return elementTotal
+    if (elementTotal.dividedBy(100).lessThanOrEqualTo(0.5)) elementTotal = new Decimal(2).plus(elementTotal.log(0.99))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(5)) elementTotal = new Decimal(20).plus(elementTotal.log(1.002))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(25)) elementTotal = new Decimal(200).plus(elementTotal.log(1.002))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(50)) elementTotal = new Decimal(4000).plus(elementTotal.log(1.005))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(75)) elementTotal = new Decimal(20000).plus(elementTotal.log(1.01))
+    else elementTotal = new Decimal(200000).plus(elementTotal.log(1.05))
+
+    return new Decimal(elementTotal);
   }
 
   function getNewEnergyMult(elementTotal){

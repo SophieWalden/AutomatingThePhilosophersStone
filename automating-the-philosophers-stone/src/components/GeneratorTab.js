@@ -17,7 +17,7 @@ function GeneratorTab(props) {
                     }
 
         if (props.getUpgradeCount("earthUpgradeR1C2") == 1){
-            costs["earth"] = costs["earth"].dividedBy((props.getValue("waterGeneratorAmount").times(props.getValue("waterGeneratorMult")).plus(1))).floor()
+            costs["earth"] = costs["earth"].dividedBy(props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))).floor()
         }
 
 
@@ -93,7 +93,7 @@ function GeneratorTab(props) {
 
     // Update Generators
      
-    let earthR2C3prod = [new Decimal(10).pow(props.getUpgradeCount("earthUpgradeR2C3")), undefined];
+    let earthR2C3prod = [new Decimal(10000).pow(props.getUpgradeCount("earthUpgradeR2C3")), undefined];
     if (props.getUpgradeCount("earthUpgradeR2C3") >= 1){
         let fireValue = new Decimal(props.getValue("fire").plus(1).log(10)).floor(); 
         let waterValue = new Decimal(props.getValue("water").plus(1).log(4)).floor(); 
@@ -182,7 +182,8 @@ function GeneratorTab(props) {
         let leftoverWater = newWater.times(0.05)
         props.addValue("condensorMult", leftoverWater);
         
-        newWater = newWater.times(0.95).times(new Decimal(1.1).pow(Math.log(props.getValue("condensorMult"))));
+
+        newWater = newWater.times(0.95).times(new Decimal(1.1).pow(props.getValue("condensorMult").log(10)));
     }
 
     if (earthR2C3prod[1] == "water"){
@@ -378,7 +379,7 @@ function GeneratorTab(props) {
             
             </button>
 
-            <button disabled={["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="earthGenerator" onClick={() => buyGenerator("earth")}>
+            <button disabled={["challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("firstReset") == false || props.getValue("energyMult") != 1  ? "" : "notUnlocked"}`} id="earthGenerator" onClick={() => buyGenerator("earth")}>
                 <h3>Earth Generator</h3>
                 <p>You have {props.formatValues(props.getValue("earth"), true)} Earth</p>
                 <h3>{props.formatValues(props.getValue("earthGeneratorAmount"))}</h3>

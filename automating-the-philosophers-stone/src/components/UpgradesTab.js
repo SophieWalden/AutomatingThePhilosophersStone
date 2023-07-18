@@ -111,7 +111,7 @@ function UpgradesTab(props) {
               <button disabled={props.getUpgradeCount("waterUpgradeR1C2") == 1} className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR1C2")} >
                   <h3>Condensor</h3>
                   <p>5% of water production is turned into a scaling multiplier on production</p>
-                  <h5>Current: {props.formatValues(new Decimal(1.1).pow(Math.log(props.getValue("condensorMult"))))}x</h5>
+                  <h5>Current: {props.formatValues(new Decimal(1.1).pow(props.getValue("condensorMult").log(10)))}x</h5>
                   <h4>Cost: {props.formatValues(props.getUpgradeCost("waterUpgradeR1C2")[0])} {props.getUpgradeCost("waterUpgradeR1C2")[1]}</h4>
                   
               </button>
@@ -146,8 +146,8 @@ function UpgradesTab(props) {
 
               <button className='Upgrade' onClick={() => props.buyUpgrade("waterUpgradeR2C3")} >
                     <h3>Primoridal Flood</h3>
-                    <p>Multiply Effective Water Generator count by 3</p>
-                    <h5>Current: {props.formatValues(new Decimal(3).pow( props.getUpgradeCount("waterUpgradeR2C3")))}x</h5>
+                    <p>Multiply Effective Water Generator count by 5</p>
+                    <h5>Current: {props.formatValues(new Decimal(5).pow( props.getUpgradeCount("waterUpgradeR2C3")))}x</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("waterUpgradeR2C3")[0])} {props.getUpgradeCost("waterUpgradeR2C3")[1]}</h4>
 
               </button>
@@ -173,7 +173,7 @@ function UpgradesTab(props) {
         </div>
 
 
-        <div id="earthUpgrades" className={`${props.getValue("firstReset") == false ? "" : "notUnlocked"}`}>
+        <div id="earthUpgrades" className={`${props.getValue("firstReset") == false || props.getValue("energyMult") != 1  ? "" : "notUnlocked"}`}>
             <h4>You have {props.formatValues(props.getValue("earth"))} Earth</h4>
 
             <div className="earthUpgradesRow">
@@ -188,7 +188,7 @@ function UpgradesTab(props) {
               <button disabled={props.getUpgradeCount("earthUpgradeR1C2") == 1} className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR1C2")} >
                   <h3>Nutrient Rich</h3>
                   <p>Divide Cost of Earth Generator by Water Generator Count + 1</p>
-                  <h5>Current: /{props.getValue("waterGeneratorAmount") * props.getValue("waterGeneratorMult") + 1}</h5>
+                  <h5>Current: /{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))) + 1) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h5>
                   <h4>Cost: {props.formatValues(props.getUpgradeCost("earthUpgradeR1C2")[0])} {props.getUpgradeCost("earthUpgradeR1C2")[1]}</h4>
 
               </button>
@@ -224,7 +224,7 @@ function UpgradesTab(props) {
               <button className='Upgrade' onClick={() => props.buyUpgrade("earthUpgradeR2C3")} >
                     <h3>Terraform</h3>
                     <p>Multiplier to generator contributing most to energy</p>
-                    <h5>Current: {props.formatValues(new Decimal(10).pow(props.getUpgradeCount("earthUpgradeR2C3")))}x</h5>
+                    <h5>Current: {props.formatValues(new Decimal(10000).pow(props.getUpgradeCount("earthUpgradeR2C3")))}x</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("earthUpgradeR2C3")[0])} {props.getUpgradeCost("earthUpgradeR2C3")[1]}</h4>
 
               </button>

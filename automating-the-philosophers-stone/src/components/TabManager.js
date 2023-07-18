@@ -23,8 +23,8 @@ function TabManager(props) {
   
       let importSave = JSON.parse(atob(save));
       for (const value in importSave){
-        if (!(value.indexOf("upgradeExport") != -1))
-          props.setValue(value, new Decimal(importSave[value]));
+        if (value.indexOf("upgradeExport") == -1)
+          props.setValue(value, importSave == true || importSave == false ? importSave : new Decimal(importSave[value]));
         else
           props.setUpgrade(value.split("upgradeExport_")[1], importSave[value]);
       }
@@ -83,13 +83,12 @@ function TabManager(props) {
       exportValues["maxAir"] = props.getValue("maxAir")
 
       for (const upgrade in upgrades){
-      exportValues["upgradeExport_" + upgrades[upgrade]] = props.getUpgradeCount(upgrades[upgrade])
+        exportValues["upgradeExport_" + upgrades[upgrade]] = props.getUpgradeCount(upgrades[upgrade])
       }
 
       let exportSave = btoa(JSON.stringify(exportValues));
       return exportSave;
     }
-  
 
   return (
     
@@ -97,9 +96,9 @@ function TabManager(props) {
       <div id="tabList">
 
         <button onClick={() => setTab('Generators')}>Generators</button>
-        <button className={props.getValue("maxFire") >= 5 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Upgrades')}>Upgrades</button>
+        <button className={props.getValue("maxFire") >= 5 || props.getValue("firstReset") == false || props.getValue("energyMult") != 1 ? "" : "notUnlocked"} onClick={() => setTab('Upgrades')}>Upgrades</button>
         <button onClick={() => setTab('Formulas')}>Formula</button>
-        <button className={props.getValue("energy") >= 8 || props.getValue("firstReset") == false ? "" : "notUnlocked"} onClick={() => setTab('Philosophers')}>Philosophers</button>
+        <button className={props.getValue("energy") >= 8 || props.getValue("firstReset") == false || props.getValue("energyMult") != 1  ? "" : "notUnlocked"} onClick={() => setTab('Philosophers')}>Philosophers</button>
         <button className={(props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C2")) || props.getChallengeValue("activeChallenge") != "") != "" ? "" : "notUnlocked"} onClick={() => setTab('Challenges')}>Challenges</button>
         <button onClick={() => setTab('Options')}>Options</button>
 
