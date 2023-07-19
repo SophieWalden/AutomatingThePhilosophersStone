@@ -27,12 +27,13 @@ function OptionsTab(props) {
   let [showImport, setShowImport] = useState(false);
 
 
-  function copyToClipboard(save, extraOptions){
+  function copyToClipboard(save){
+    document.execCommand("copy")
     navigator.clipboard.writeText(save);
+  }
 
-    if (extraOptions == "localSave"){
-      download(save, "AutomatingThePhilosophersStoneSave.txt", "txt")
-    }
+  function copyToFile(save){
+    download(save, "AutomatingThePhilosophersStoneSave.txt", "txt")
   }
 
   function handleSaveChange(event){
@@ -82,7 +83,8 @@ function OptionsTab(props) {
         <h3>Exports are saved to your clipboard and downloaded as a file!</h3>
 
         <div id="OptionsButtonContainer">
-          <button onClick={() => copyToClipboard(props.exportGame(), "localSave")}>Export Game</button>
+          <button onClick={() => copyToClipboard(props.exportGame())}>Export Game to Clipboard</button>
+          <button onClick={() => copyToFile(props.exportGame())}>Export Game to File</button>
           <button onClick={() => setShowImport(true)}>Import Game</button>
           <button onClick={() => resetGame()}>Reset Game</button>
 
