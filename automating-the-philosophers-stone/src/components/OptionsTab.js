@@ -25,10 +25,11 @@ function OptionsTab(props) {
 
   let [save, setSave] = useState('');
   let [showImport, setShowImport] = useState(false);
+  let [showExport, setShowExport] = useState(false);
 
 
   function copyToClipboard(save){
-    document.execCommand("copy")
+    setSave(save);
     navigator.clipboard.writeText(save);
   }
 
@@ -79,11 +80,21 @@ function OptionsTab(props) {
           
         </div>
 
+        <div id="exportPrompt" className={showExport ? "" : "displayNone"}>
+          <button id="cancelExportButton" onClick={() => setShowExport(false)}>X</button>
+
+          
+          <h3>Copy your save file!</h3> 
+          <textarea value={save} readOnly/> 
+          
+        </div>
+
+
         <h2>Options</h2>
         <h3>Exports are saved to your clipboard and downloaded as a file!</h3>
 
         <div id="OptionsButtonContainer">
-          <button onClick={() => copyToClipboard(props.exportGame())}>Export Game to Clipboard</button>
+          <button onClick={() => copyToClipboard(props.exportGame()) || setShowExport(true)}>Export Game to Clipboard</button>
           <button onClick={() => copyToFile(props.exportGame())}>Export Game to File</button>
           <button onClick={() => setShowImport(true)}>Import Game</button>
           <button onClick={() => resetGame()}>Reset Game</button>

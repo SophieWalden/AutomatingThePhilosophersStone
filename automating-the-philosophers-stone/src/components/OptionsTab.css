@@ -1,4 +1,5 @@
-#cancelImportButton{
+#cancelImportButton,
+#cancelExportButton{
     background-color: #A78295 !important;
     width: 3vw !important;
     height: 3vw !important;
@@ -41,7 +42,8 @@
     display: none !important;
 }
 
-#importPrompt{
+#importPrompt,
+#exportPrompt{
     position: absolute;
     z-index: 100;
     background-color: #331D2C;
@@ -54,13 +56,20 @@
     border-radius: 15px;
 }
 
+#exportPrompt textArea{
+    margin-left: 2vw;
+    width: 30vw !important;
+    height: 20vh !important;
+}
+
 #importPrompt textArea{
     margin-left: 2vw;
     width: 20vw !important;
     height: 13vh !important;
 }
 
-#importSubmitButton{
+#importSubmitButton,
+#exportSubmitButton{
     margin-top: 2vh;
     width: 10vw !important;
     height: 5vh !important;
