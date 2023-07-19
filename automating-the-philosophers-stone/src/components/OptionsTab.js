@@ -24,11 +24,7 @@ function OptionsTab(props) {
   }
 
   function loadSave(){
-   
-      
     props.importGame(localStorage.getItem("automatingThePhilosophersStoneSave"))
-      
-
   }
 
 

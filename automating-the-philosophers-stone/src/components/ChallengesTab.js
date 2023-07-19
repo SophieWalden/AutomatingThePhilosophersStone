@@ -47,13 +47,13 @@ function ChallengesTab(props) {
   }
 
   function challengeConditionCompleted(){
-    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(25));
-    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(25));
-    if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
-    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
-    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(40));
-    if (challenge == "challenge6") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
-    if (challenge == "challenge7") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
+    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(40));
+    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(40));
+    if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(6));
+    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(7));
+    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(60));
+    if (challenge == "challenge6") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(8));
+    if (challenge == "challenge7") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(10));
   }
 
   function getChallengeCompletions(){
@@ -152,7 +152,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge1" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e25 Water</h4>
+                <h4>Goal: 1e40 Water</h4>
                 <h3>Reward: Water Generator Effective count ^ 1.2</h3>
 
               </div>
@@ -160,7 +160,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge2" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e25 Earth</h4>
+                <h4>Goal: 1e40 Earth</h4>
                 <h3>Reward: Earth Production Multiplier based on Earth Generator Amount</h3>
 
               </div>
@@ -168,7 +168,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge3" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e5 Energy</h4>
+                <h4>Goal: 1e6 Energy</h4>
                 <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; 1.01^(Energy without mult))</h3>
 
               </div>
@@ -176,7 +176,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge4" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e5 Energy</h4>
+                <h4>Goal: 1e7 Energy</h4>
                 <h3>Reward: Unlock Space Generators, generating all generators of basic types</h3>
 
               </div>
@@ -184,7 +184,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge5" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e40 Fire</h4>
+                <h4>Goal: 1e60 Fire</h4>
                 <h3>Reward: Fire Generators amount is squared</h3>
 
               </div>
@@ -192,7 +192,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge6" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e5 Energy</h4>
+                <h4>Goal: 1e8 Energy</h4>
                 <h3>Reward: Giant scaling multiplier based on time played ({props.formatValues(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)))})</h3>
 
               </div>
@@ -200,7 +200,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge7" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e5 Energy</h4>
+                <h4>Goal: 1e10 Energy</h4>
                 <h3>Reward: Unlock Aether generator, generating pure energy</h3>
 
               </div>
