@@ -2,14 +2,37 @@ import './OptionsTab.css';
 import React, {useState} from "react";
 import Decimal from "break_infinity.js";
 
+// Function to download data to a file
+function download(data, filename, type) {
+  var file = new Blob([data], {type: type});
+  if (window.navigator.msSaveOrOpenBlob) // IE10+
+      window.navigator.msSaveOrOpenBlob(file, filename);
+  else { // Others
+      var a = document.createElement("a"),
+              url = URL.createObjectURL(file);
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);  
+      }, 0); 
+  }
+}
+
 function OptionsTab(props) {
 
   let [save, setSave] = useState('');
   let [showImport, setShowImport] = useState(false);
 
 
-  function copyToClipboard(save){
+  function copyToClipboard(save, extraOptions){
     navigator.clipboard.writeText(save);
+
+    if (extraOptions == "localSave"){
+      download(save, "AutomatingThePhilosophersStoneSave.txt", "txt")
+    }
   }
 
   function handleSaveChange(event){
@@ -56,10 +79,10 @@ function OptionsTab(props) {
         </div>
 
         <h2>Options</h2>
-        <h3>Exports are saved to your clipboard!</h3>
+        <h3>Exports are saved to your clipboard and downloaded as a file!</h3>
 
         <div id="OptionsButtonContainer">
-          <button onClick={() => copyToClipboard(props.exportGame())}>Export Game</button>
+          <button onClick={() => copyToClipboard(props.exportGame(), "localSave")}>Export Game</button>
           <button onClick={() => setShowImport(true)}>Import Game</button>
           <button onClick={() => resetGame()}>Reset Game</button>
 
