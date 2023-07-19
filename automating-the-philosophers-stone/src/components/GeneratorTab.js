@@ -158,7 +158,7 @@ function GeneratorTab(props) {
     props.addValue("earth", newEarth);
     
     // Water
-    let newWater = (getGeneratorAmount("water").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))).pow(props.getChallengeValue("challengeOneCompletions") * 0.2 + 1).times(deltaTime);
+    let newWater = (getGeneratorAmount("water").times(new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3")))).pow(props.getChallengeValue("challengeOneCompletions") * 0.2 + 1).times(deltaTime);
 
     if (props.getUpgradeCount("earthUpgradeR2C2") == 1){
         newWater = newWater.plus(newEarth.times(0.01));
@@ -374,7 +374,7 @@ function GeneratorTab(props) {
             <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("energy") >= 3 || props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
-                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
+                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3")))) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
                 <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
             </button>

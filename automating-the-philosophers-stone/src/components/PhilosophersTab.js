@@ -57,11 +57,12 @@ function PhilosophersTab(props) {
 
     let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
 
-    if (elementTotal.dividedBy(100).lessThanOrEqualTo(0.5)) elementTotal = new Decimal(2).plus(elementTotal.log(0.99))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(5)) elementTotal = new Decimal(20).plus(elementTotal.log(1.002))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(25)) elementTotal = new Decimal(200).plus(elementTotal.log(1.002))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(50)) elementTotal = new Decimal(4000).plus(elementTotal.log(1.005))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(75)) elementTotal = new Decimal(20000).plus(elementTotal.log(1.01))
+  
+    if (elementTotal.dividedBy(100).lessThanOrEqualTo(0.5)) elementTotal = new Decimal(2).plus(elementTotal.times(10))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(5)) elementTotal = new Decimal(50).plus(elementTotal.times(5))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(25)) elementTotal = new Decimal(500).plus(elementTotal.log(1.002))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(50)) elementTotal = new Decimal(2500).plus(elementTotal.log(1.05))
+    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(75)) elementTotal = new Decimal(12500).plus(elementTotal.log(1.01))
     else elementTotal = new Decimal(200000).plus(elementTotal.log(1.05))
 
     return new Decimal(elementTotal);
