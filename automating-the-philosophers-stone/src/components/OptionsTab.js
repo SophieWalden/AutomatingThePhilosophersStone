@@ -18,20 +18,16 @@ function OptionsTab(props) {
 
   function autosave(){
     let save = props.exportGame();
-    document.cookie = `save=${save};SameSite=Lax`
+    localStorage.setItem("automatingThePhilosophersStoneSave", save);
+
 
   }
 
   function loadSave(){
-    let cookies = document.cookie.split(";")
-
-    for (const cookie in cookies){
-      let [key, value] = cookies[cookie].split("=")
-
-      if (key == "save"){
-        props.importGame(value)
-      }
-    }
+   
+      
+    props.importGame(localStorage.getItem("automatingThePhilosophersStoneSave"))
+      
 
   }
 
