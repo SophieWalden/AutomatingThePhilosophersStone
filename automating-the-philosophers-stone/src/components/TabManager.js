@@ -85,6 +85,8 @@ function TabManager(props) {
       exportValues["maxFire"] = props.getValue("maxFire")
       exportValues["maxEarth"] = props.getValue("maxEarth")
       exportValues["maxAir"] = props.getValue("maxAir")
+      exportValues["maxSpace"] = props.getValue("maxSpace")
+      exportValues["maxAether"] = props.getValue("maxAether")
 
       exportValues["challenge1"] = props.getChallengeValue("challengeOneCompletions");
       exportValues["challenge2"] = props.getChallengeValue("challengeTwoCompletions");
