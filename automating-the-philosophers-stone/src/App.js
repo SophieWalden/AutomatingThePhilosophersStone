@@ -72,6 +72,14 @@ function App() {
   let [saveBeforeChallenge, setSaveBeforeChallenge] = useState("");
   let [timeOfStartChallenge, setTimeOfStartChallenge] = useState(Date.now());
 
+  let [challengeOneHighest, setChallengeOneHighest] = useState(new Decimal(0));
+  let [challengeTwoHighest, setChallengeTwoHighest] = useState(new Decimal(0));
+  let [challengeThreeHighest, setChallengeThreeHighest] = useState(new Decimal(0));
+  let [challengeFourHighest, setChallengeFourHighest] = useState(new Decimal(0));
+  let [challengeFiveHighest, setChallengeFiveHighest] = useState(new Decimal(0));
+  let [challengeSixHighest, setChallengeSixHighest] = useState(new Decimal(0));
+  let [challengeSevenHighest, setChallengeSevenHighest] = useState(new Decimal(0));
+
   // Unlocking Stats
   let [firstReset, setFirstReset] = useState(true);
 
@@ -81,9 +89,10 @@ function App() {
   let [philosopherR2C1, setPhilosopherR2C1] = useState(new Decimal(15));
   let [philosopherR2C2, setPhilosopherR2C2] = useState(new Decimal(20));
   let [philosopherR3C1, setPhilosopherR3C1] = useState(new Decimal(30));
-  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(39.6));
+  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(39));
 
   function formatValues(value, decimalMode){
+    value = new Decimal(value);
 
     if (new Decimal(1000).greaterThan(value)){
       // Return small decimal number
@@ -104,13 +113,13 @@ function App() {
     return value.toExponential(2).toString().replace("+","");
   }
 
-  let valueGetters = {"startOfGame": startOfGame, "lastResetTime": lastResetTime, "waterProductionMult": waterProductionMult, "philosopherR3C1": philosopherR3C1, "philosopherR3C2": philosopherR3C2, "philosopherR2C1": philosopherR2C1, "philosopherR2C2": philosopherR2C2, "philosopherR1C1": philosopherR1C1, "philosopherR1C2": philosopherR1C2, "firstReset": firstReset, "maxSpace": maxSpace, "maxAether": maxAether, "productionMult": productionMult, "maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount.plus(space).pow(challengeFiveCompletions == 1 ? 2 : 1), "waterGeneratorAmount": waterGeneratorAmount.plus(space), "earthGeneratorAmount": earthGeneratorAmount.plus(space), "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
+  let valueGetters = {"challengeSevenHighest": challengeSevenHighest, "challengeSixHighest": challengeSixHighest, "challengeFiveHighest": challengeFiveHighest, "challengeFourHighest":challengeFourHighest, "challengeThreeHighest": challengeThreeHighest, "challengeOneHighest": challengeOneHighest, "challengeTwoHighest": challengeTwoHighest, "startOfGame": startOfGame, "lastResetTime": lastResetTime, "waterProductionMult": waterProductionMult, "philosopherR3C1": philosopherR3C1, "philosopherR3C2": philosopherR3C2, "philosopherR2C1": philosopherR2C1, "philosopherR2C2": philosopherR2C2, "philosopherR1C1": philosopherR1C1, "philosopherR1C2": philosopherR1C2, "firstReset": firstReset, "maxSpace": maxSpace, "maxAether": maxAether, "productionMult": productionMult, "maxAir": maxAir, "air": air, "space": space, "aether": aether, "airGeneratorAmount": airGeneratorAmount, "spaceGeneratorAmount": spaceGeneratorAmount, "aetherGeneratorAmount": aetherGeneratorAmount, "energyMult": energyMult, "sacrificedTotal": sacrificedTotal, "maxFire": maxFire, "maxWater": maxWater, "maxEarth": maxEarth, "timeSinceStartOfGame": timeSinceStartOfGame, "waterGeneratorMult": waterGeneratorMult, "condensorMult": waterProductionMult, "flameburstLength": flameburstLength, "flameburstMult": flameburstMult, "flameburstChance": flameburstChance, "fireGeneratorAmount": fireGeneratorAmount.plus(space).pow(challengeFiveCompletions == 1 ? new Decimal(1.05).plus(new Decimal(challengeThreeHighest.plus(1).log(10)).dividedBy(100)) : 1), "waterGeneratorAmount": waterGeneratorAmount.plus(space), "earthGeneratorAmount": earthGeneratorAmount.plus(space), "energy": energy, "spentEnergy": spentEnergy, "fire": fire, "energyLeft": energy.minus(spentEnergy), "water": water, "earth": earth, "timeSinceLastRebirth": timeSinceLastReset};
   
   function getValue(name){
     return valueGetters[name];
   }
 
-  let valueSetters = {"lastResetTime": setLastResetTime, "startOfGame": setStartOfGame, "waterProductionMult": setWaterProductionMult, "philosopherR3C1": setPhilosopherR3C1, "philosopherR3C2": setPhilosopherR3C2, "philosopherR2C1": setPhilosopherR2C1, "philosopherR2C2": setPhilosopherR2C2, "philosopherR1C1": setPhilosopherR1C1, "philosopherR1C2": setPhilosopherR1C2, "firstReset": setFirstReset, "maxSpace": setMaxSpace, "maxAether": setMaxAether, "productionMult": setProductionMult, "maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
+  let valueSetters = {"challengeSevenHighest": setChallengeSevenHighest, "challengeSixHighest": setChallengeSixHighest, "challengeFiveHighest": setChallengeFiveHighest, "challengeFourHighest":setChallengeFourHighest, "challengeThreeHighest": setChallengeThreeHighest, "challengeOneHighest": setChallengeOneHighest, "challengeTwoHighest": setChallengeTwoHighest,"lastResetTime": setLastResetTime, "startOfGame": setStartOfGame, "waterProductionMult": setWaterProductionMult, "philosopherR3C1": setPhilosopherR3C1, "philosopherR3C2": setPhilosopherR3C2, "philosopherR2C1": setPhilosopherR2C1, "philosopherR2C2": setPhilosopherR2C2, "philosopherR1C1": setPhilosopherR1C1, "philosopherR1C2": setPhilosopherR1C2, "firstReset": setFirstReset, "maxSpace": setMaxSpace, "maxAether": setMaxAether, "productionMult": setProductionMult, "maxWater": setMaxWater, "maxEarth": setMaxEarth, "maxFire": setMaxFire, "startOfGame": setStartOfGame, "maxAir": setMaxAir, "air": setAir, "space": setSpace, "aether": setAether, "airGeneratorAmount": setAirGeneratorAmount, "spaceGeneratorAmount": setSpaceGeneratorAmount, "aetherGeneratorAmount": setAetherGeneratorAmount, "energyMult": setEnergyMult, "sacrificedTotal": setSacrificedTotal, "timeSinceLastReset": setLastResetTime, "timeSinceStartOfGame": setTimeSinceStartOfGame, "waterGeneratorMult": setWaterGeneratorMult, "condensorMult": setWaterProductionMult, "flameburstLength": setFlameburstLength, "flameburstMult": setFlameburstMult, "flameburstChance": setFlameburstChance, "energy": setEnergy,  "fireGeneratorAmount": setFireGeneratorAmount, "waterGeneratorAmount": setWaterGeneratorAmount, "earthGeneratorAmount": setEarthGeneratorAmount, "spentEnergy": setSpentEnergy, "fire": setFire, "water": setWater, "earth": setEarth, "time": setTimeSinceLastReset};
 
   function setValue(name, value){
     valueSetters[name](value);

@@ -16,6 +16,7 @@ function PhilosophersTab(props) {
     // Add to sacrifice total based on element amounts
     let elementTotal = getElementalTotal()
     if (elementTotal.greaterThan(props.getValue("sacrificedTotal"))) props.setValue("sacrificedTotal", new Decimal(elementTotal));
+    elementTotal = Decimal.max(elementTotal, props.getValue("sacrificedTotal"))
 
     let newEnergyMult = getNewEnergyMult(elementTotal);
     if (newEnergyMult.greaterThan(props.getValue("energyMult")))props.setValue("energyMult", newEnergyMult);
@@ -57,7 +58,6 @@ function PhilosophersTab(props) {
 
     let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
 
-  
     if (elementTotal.dividedBy(100).lessThanOrEqualTo(0.5)) elementTotal = new Decimal(2).plus(elementTotal.times(10))
     else if (elementTotal.dividedBy(100).lessThanOrEqualTo(5)) elementTotal = new Decimal(50).plus(elementTotal.times(5))
     else if (elementTotal.dividedBy(100).lessThanOrEqualTo(25)) elementTotal = new Decimal(500).plus(elementTotal.log(1.002))
@@ -65,12 +65,13 @@ function PhilosophersTab(props) {
     else if (elementTotal.dividedBy(100).lessThanOrEqualTo(75)) elementTotal = new Decimal(12500).plus(elementTotal.log(1.01))
     else elementTotal = new Decimal(200000).plus(elementTotal.log(1.05))
 
+
     return new Decimal(elementTotal);
   }
 
   function getNewEnergyMult(elementTotal){
-    let newEnergyMult = new Decimal(1.004).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
-    if (props.getChallengeValue("challengeThreeCompletions")){
+    let newEnergyMult = new Decimal(props.formatValues(new Decimal(1.05).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
+    if (props.getChallengeValue("challengeThreeCompletions") != 1){
       newEnergyMult = new Decimal(1.01).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
     }
 
@@ -94,7 +95,7 @@ function PhilosophersTab(props) {
         <button id="philosophyResetButton" onClick={ResetEnergy}>Reset!</button>
         <h3>Reset everything, but keep your energy and get an energy mult</h3>
 
-        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(getNewEnergyMult(getElementalTotal()))}x</h3>
+        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(Decimal.max(props.getValue("energyMult"), getNewEnergyMult(getElementalTotal())))}x</h3>
       </div>
       <div>
 

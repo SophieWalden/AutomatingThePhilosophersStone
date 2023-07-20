@@ -5,7 +5,7 @@ import Decimal from "break_infinity.js";
 
 function ChallengesTab(props) {
 
-  let [challenge, setChallenge] = React.useState("challenge1");
+  let [challenge, setChallenge] = React.useState(props.getValue("activeChallenge") != "" ? "challenge1" : props.getValue("activeChallenge"));
 
   function startChallenge(){
     let save = props.exportGame();
@@ -17,8 +17,8 @@ function ChallengesTab(props) {
     let blankSave = "eyJlbmVyZ3kiOiIxIiwic3BlbnRFbmVyZ3kiOiIwIiwic2FjcmlmaWNlZFRvdGFsIjoiMCIsImVuZXJneU11bHQiOiIxIiwiZmlyZSI6IjAiLCJ3YXRlciI6IjAiLCJlYXJ0aCI6IjAiLCJhaXIiOiIwIiwic3BhY2UiOiIwIiwiYWV0aGVyIjoiMCIsImZpcmVHZW5lcmF0b3JBbW91bnQiOiIwIiwid2F0ZXJHZW5lcmF0b3JBbW91bnQiOiIwIiwiZWFydGhHZW5lcmF0b3JBbW91bnQiOiIwIiwiYWlyR2VuZXJhdG9yQW1vdW50IjoiMCIsInNwYWNlR2VuZXJhdG9yQW1vdW50IjoiMCIsImFldGhlckdlbmVyYXRvckFtb3VudCI6IjAiLCJmbGFtZWJ1cnN0TXVsdCI6IjEwIiwiZmxhbWVidXJzdENoYW5jZSI6IjAuMSIsImZsYW1lYnVyc3RMZW5ndGgiOiIxIiwid2F0ZXJHZW5lcmF0b3JNdWx0IjoiMSIsInRpbWVTaW5jZVN0YXJ0T2ZHYW1lIjoiMjI0MyIsIm1heFdhdGVyIjoiMCIsIm1heEZpcmUiOiIwIiwibWF4RWFydGgiOiIwIiwibWF4QWlyIjoiMCIsInVwZ3JhZGVFeHBvcnRfZmlyZVJlcGVhdGFibGUiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMUMxIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjFDMiI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIxQzMiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMkMxIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjJDMiI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIyQzMiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJSZXBlYXRhYmxlIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIxQzEiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjFDMiI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMUMzIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIyQzEiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjJDMiI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMkMzIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoUmVwZWF0YWJsZSI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMUMxIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIxQzIiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjFDMyI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMkMxIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIyQzIiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjJDMyI6MH0="
     props.importGame(blankSave);
 
-    if (challenge == "challenge7") props.setValue("energyMult", energyMult.pow(0.02)); 
-    else props.setValue("energyMult", energyMult.pow(0.2));
+    
+    props.setValue("energyMult", energyMult.pow(0.2));
 
     props.setValue("firstReset", false);
 
@@ -30,21 +30,42 @@ function ChallengesTab(props) {
   }
 
   function exitChallenge(){
+    let currentChallenge = props.getChallengeValue("activeChallenge");
+    if (challenge != currentChallenge) setChallenge(currentChallenge);
     let challengeCompleted = challengeConditionCompleted();
+    let highest = getScalingFactor(currentChallenge);
+    
 
     props.importGame(props.getChallengeValue("saveBeforeChallenge"));
     props.setChallengeValue("activeChallenge", "");
+    console.log(currentChallenge);
+    props.setValue(getHighestName(currentChallenge), Decimal.max(props.getValue(getHighestName(currentChallenge)), highest))
 
     if (challengeCompleted){
-      if (challenge == "challenge1") props.setChallengeValue("challengeOneCompletions", 1);
-      if (challenge == "challenge2") props.setChallengeValue("challengeTwoCompletions", 1);
-      if (challenge == "challenge3") props.setChallengeValue("challengeThreeCompletions", 1);
-      if (challenge == "challenge4") props.setChallengeValue("challengeFourCompletions", 1);
-      if (challenge == "challenge5") props.setChallengeValue("challengeFiveCompletions", 1);
-      if (challenge == "challenge6") props.setChallengeValue("challengeSixCompletions", 1);
-      if (challenge == "challenge7") props.setChallengeValue("challengeSevenCompletions", 1);
+      if (currentChallenge == "challenge1") props.setChallengeValue("challengeOneCompletions", 1);
+      if (currentChallenge == "challenge2") props.setChallengeValue("challengeTwoCompletions", 1);
+      if (currentChallenge == "challenge3") props.setChallengeValue("challengeThreeCompletions", 1);
+      if (currentChallenge == "challenge4") props.setChallengeValue("challengeFourCompletions", 1);
+      if (currentChallenge == "challenge5") props.setChallengeValue("challengeFiveCompletions", 1);
+      if (currentChallenge == "challenge6") props.setChallengeValue("challengeSixCompletions", 1);
+      if (currentChallenge == "challenge7") props.setChallengeValue("challengeSevenCompletions", 1);
     }
 
+  }
+
+  function getHighestName(challenge){
+    return {"challenge1": "challengeOneHighest", "challenge2": "challengeTwoHighest", "challenge3": "challengeThreeHighest",
+    "challenge4": "challengeFourHighest", "challenge5": "challengeFiveHighest", "challenge6": "challengeSixHighest", "challenge7": "challengeSevenHighest"}[challenge]
+  }
+
+  function getScalingFactor(challenge){
+    if (challenge == "challenge1") return props.getValue("maxWater");
+    if (challenge == "challenge2") return props.getValue("maxEarth");
+    if (challenge == "challenge3") return props.getValue("energy");
+    if (challenge == "challenge4") return props.getValue("energy");
+    if (challenge == "challenge5") return props.getValue("maxFire");
+    if (challenge == "challenge6") return props.getValue("energy");
+    if (challenge == "challenge7") return props.getValue("energy");
   }
 
   function challengeConditionCompleted(){
@@ -73,6 +94,9 @@ function ChallengesTab(props) {
     
     <div className="ChallengesContainer">
         <h2>Challenges</h2>
+        <h3>Challenges puts you in a modified run with everything reset except a reduced energy multiplier based on your current multiplier</h3>
+        <h3>Your reward for a challenge is based on your highest achievable value for a certain element that you are aiming for the in the challenge</h3>
+        <h4>You can exit challenges at any time to come back to your current save</h4>
 
         <div id="challengeSelector">
           <button className={props.getChallengeValue("challengeOneCompletions")==1 ? "ChallengeCompleted" : ""} onClick={() => setChallenge("challenge1")}>
@@ -154,7 +178,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e225 Water</h4>
-                <h3>Reward: Water Generator Effective count ^ 1.2</h3>
+                <h3>Reward: Water Generator Effective count ^ ({props.formatValues(new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2))})</h3>
 
               </div>
 
@@ -162,7 +186,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e70 Earth</h4>
-                <h3>Reward: Earth Production Multiplier based on Earth Generator Amount</h3>
+                <h3>Reward: Earth Production Multiplier based on Earth Generator Amount and Highest Earth in this Challenge ({props.formatValues(props.getValue("earthGeneratorAmount").times(new Decimal(props.getValue("challengeTwoHighest").plus(1).log(10)).plus(1)))}x)</h3>
 
               </div>
 
@@ -170,7 +194,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e5 Energy</h4>
-                <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; 1.01^(Energy without mult))</h3>
+                <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; {props.formatValues(new Decimal(1.05).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))}^(Energy without mult))</h3>
 
               </div>
 
@@ -186,7 +210,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e40 Fire</h4>
-                <h3>Reward: Fire Generators amount is squared</h3>
+                <h3>Reward: Fire Generators^{props.formatValues(new Decimal(1.8).plus(new Decimal(props.getValue("challengeFiveHighest").plus(1).log(1000000)).dividedBy(10)))}</h3>
 
               </div>
 
@@ -194,7 +218,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e8 Energy</h4>
-                <h3>Reward: Giant scaling multiplier based on time played ({props.formatValues(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)))})</h3>
+                <h3>Reward: Giant scaling multiplier based on time played ({props.formatValues(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)).times(props.getValue("challengeSixHighest").log(10)))})</h3>
 
               </div>
 

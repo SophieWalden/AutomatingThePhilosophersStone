@@ -25,9 +25,9 @@ function TabManager(props) {
       let importSave = JSON.parse(atob(save));
 
       for (const value in importSave){
-        if (value.indexOf("upgradeExport") == -1 && (value.indexOf("challenge") == -1 && value != "activeChallenge"))
-          props.setValue(value, importSave == true || importSave == false ? importSave : new Decimal(importSave[value]));
-        else if (value.indexOf("challenge") != -1 || value == "activeChallenge") 
+        if (value.indexOf("upgradeExport") == -1 && ((value.indexOf("challenge") == -1 && value != "activeChallenge" && value != "saveBeforeChallenge") || value.indexOf("Highest") != -1))
+          props.setValue(value, new Decimal(importSave[value]));
+        else if (value.indexOf("challenge") != -1 || value == "activeChallenge" || value == "saveBeforeChallenge") 
           props.setChallengeValue(value,importSave[value])
         else
           props.setUpgrade(value.split("upgradeExport_")[1], importSave[value]);
@@ -96,6 +96,17 @@ function TabManager(props) {
       exportValues["challenge6"] = props.getChallengeValue("challengeSixCompletions");
       exportValues["challenge7"] = props.getChallengeValue("challengeSevenCompletions");
       exportValues["activeChallenge"] = props.getChallengeValue("activeChallenge");
+      exportValues["saveBeforeChallenge"] = props.getChallengeValue("saveBeforeChallenge")
+
+      exportValues["challengeOneHighest"] = props.getValue("challengeOneHighest");
+      exportValues["challengeTwoHighest"] = props.getValue("challengeTwoHighest");
+      exportValues["challengeThreeHighest"] = props.getValue("challengeThreeHighest");
+      exportValues["challengeFourHighest"] = props.getValue("challengeFourHighest");
+      exportValues["challengeFiveHighest"] = props.getValue("challengeFiveHighest");
+      exportValues["challengeSixHighest"] = props.getValue("challengeSixHighest");
+      exportValues["challengeSevenHighest"] = props.getValue("challengeSevenHighest");
+
+      
 
       for (const upgrade in upgrades){
         exportValues["upgradeExport_" + upgrades[upgrade]] = props.getUpgradeCount(upgrades[upgrade])

@@ -13,7 +13,7 @@ function GeneratorTab(props) {
                      "earth": new Decimal(10).times(new Decimal(2.5).pow(props.getValue("earthGeneratorAmount"))).floor(),
                      "air": new Decimal(25).times(new Decimal(3.5).pow(props.getValue("airGeneratorAmount"))).floor(),
                      "space": new Decimal(50).times(new Decimal(5).pow(props.getValue("spaceGeneratorAmount"))).floor(),
-                     "aether": new Decimal(75).times(new Decimal(10).pow(props.getValue("spaceGeneratorAmount"))).floor()
+                     "aether": new Decimal(75).times(new Decimal(10).pow(props.getValue("aetherGeneratorAmount"))).floor()
                     }
 
         if (props.getUpgradeCount("earthUpgradeR1C2") == 1){
@@ -130,7 +130,7 @@ function GeneratorTab(props) {
     }
 
     if (props.getUpgradeCount("earthUpgradeR1C1") == 1){
-        newEarth = newEarth.times(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus(props.getValue("waterGeneratorAmount").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3")))));
+        newEarth = newEarth.times(new Decimal(1).plus(props.getValue("fireGeneratorAmount")).plus(props.getValue("earthGeneratorAmount")).plus((props.getValue("waterGeneratorAmount").times((new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3"))))).pow(props.getChallengeValue("challengeOneCompletions") == 1 ? (new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2)) : 1)));
     }
 
     if (earthR2C3prod[1] == "earth"){
@@ -138,7 +138,7 @@ function GeneratorTab(props) {
     }
 
     if (props.getChallengeValue("challengeTwoCompletions")){
-        newEarth = newEarth.times(getGeneratorAmount("earth"));
+        newEarth = newEarth.times(props.getValue("earthGeneratorAmount").times(new Decimal(props.getValue("challengeTwoHighest").plus(1).log(10)).plus(1)));
     }
 
     newEarth = newEarth.times(new Decimal(2).pow(props.getUpgradeCount("earthRepeatable")))
@@ -148,7 +148,7 @@ function GeneratorTab(props) {
     }
 
     if (props.getChallengeValue("challengeSixCompletions")){
-        newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
+        newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)).times(props.getValue("challengeSixHighest").log(10)));
     }
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newEarth = newEarth.pow(0.5);
@@ -171,7 +171,7 @@ function GeneratorTab(props) {
 
 
     if (props.getUpgradeCount("waterUpgradeR1C1")){
-        newWater = newWater.times(props.getValue("waterGeneratorAmount").times(new Decimal(3).pow(props.getUpgradeCount("waterUpgradeR2C3"))).plus(1))
+        newWater = newWater.times((props.getValue("waterGeneratorAmount").times((new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3"))))).pow(props.getChallengeValue("challengeOneCompletions") == 1 ? (new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2)) : 1).plus(1))
     }
 
     if (props.getUpgradeCount("waterUpgradeR2C1")){
@@ -304,12 +304,12 @@ function GeneratorTab(props) {
     }
 
     // Correcting negatives
-    if (props.getValue("fire") < 0) props.setValue("fire", 1);
-    if (props.getValue("water") < 0) props.setValue("water", 1);
-    if (props.getValue("earth") < 0) props.setValue("earth", 1);
-    if (props.getValue("air") < 0) props.setValue("air", 1);
-    if (props.getValue("space") < 0) props.setValue("space", 1);
-    if (props.getValue("aether") < 0) props.setValue("aether", 1);
+    if (props.getValue("fire") < 0) props.setValue("fire", new Decimal(1));
+    if (props.getValue("water") < 0) props.setValue("water", new Decimal(1));
+    if (props.getValue("earth") < 0) props.setValue("earth", new Decimal(1));
+    if (props.getValue("air") < 0) props.setValue("air", new Decimal(1));
+    if (props.getValue("space") < 0) props.setValue("space", new Decimal(1));
+    if (props.getValue("aether") < 0) props.setValue("aether", new Decimal(1));
 
   }
 
@@ -381,7 +381,7 @@ function GeneratorTab(props) {
             <button disabled={["challenge2", "challenge5"].indexOf(props.getChallengeValues("activeChallenge")) != -1} className={`Generator ${props.getValue("energy") >= 3 || props.getValue("firstReset") == false ? "" : "notUnlocked"}`} id="waterGenerator" onClick={() => buyGenerator("water")}>
                 <h3>Water Generator</h3>
                 <p>You have {props.formatValues(props.getValue("water"), true)} Water</p>
-                <h3>{props.formatValues(new Decimal((props.getValue("waterGeneratorAmount") * (new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3")))) ** (1 + 0.2*props.getChallengeValue("challengeOneCompletions"))))}</h3>
+                <h3>{props.formatValues((props.getValue("waterGeneratorAmount").times((new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3"))))).pow(props.getChallengeValue("challengeOneCompletions") == 1 ? (new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2)) : 1))}</h3>
                 <h4>Cost: {props.formatValues(getCost("water"))} {props.getValue("waterGeneratorAmount") > 0 ? "water" : "energy"}</h4>
             
             </button>

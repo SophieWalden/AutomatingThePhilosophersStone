@@ -4,6 +4,10 @@
     height: 8vh !important;
 }
 
+.buyable{
+    border: solid green 2px !important;
+}
+
 .autobuyerHolder{
     display: flex;
     flex-direction: column;
