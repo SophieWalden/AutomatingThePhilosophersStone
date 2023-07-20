@@ -38,7 +38,7 @@ function ChallengesTab(props) {
 
     props.importGame(props.getChallengeValue("saveBeforeChallenge"));
     props.setChallengeValue("activeChallenge", "");
-    console.log(currentChallenge);
+    console.log(Decimal.max(props.getValue(getHighestName(currentChallenge)), getHighestName(currentChallenge)));
     props.setValue(getHighestName(currentChallenge), Decimal.max(props.getValue(getHighestName(currentChallenge)), highest))
 
     if (challengeCompleted){

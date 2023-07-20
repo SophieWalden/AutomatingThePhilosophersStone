@@ -14,8 +14,22 @@ function UpgradesTab(props) {
     return false;
   }
 
+
+  function amountYouCanBuy(money, currentCost){
+    return Math.floor(Decimal.log(new Decimal(1).plus(money.times(5 - 1).dividedBy(currentCost)), 5))
+  }  
+  
   function buyMax(upgrade){
-    props.buyUpgrade(upgrade, 5000000);
+    let [cost, element] = props.getUpgradeCost(upgrade);
+
+    let currency = {"fireRepeatable": props.getValue("fire"), "waterRepeatable": props.getValue("water"), "earthRepeatable": props.getValue("earth")}[upgrade];
+    let amount = amountYouCanBuy(currency, cost);
+    let costForAmount = cost.times(new Decimal(1).minus(new Decimal(5).pow(amount))).dividedBy(new Decimal(1).minus(5));
+    
+
+    props.addValue(element, costForAmount.times(-1));
+    props.setUpgrade(upgrade, props.getUpgradeCount(upgrade) + amount);
+    //props.buyUpgrade(upgrade, 5000000);
   }
 
   function upgradeIsBuyable(upgrade){
