@@ -81,7 +81,7 @@ function App() {
   let [philosopherR2C1, setPhilosopherR2C1] = useState(new Decimal(15));
   let [philosopherR2C2, setPhilosopherR2C2] = useState(new Decimal(20));
   let [philosopherR3C1, setPhilosopherR3C1] = useState(new Decimal(30));
-  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(40));
+  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(39.6));
 
   function formatValues(value, decimalMode){
 
@@ -235,7 +235,7 @@ function App() {
   let challengeGetters = {"timeOfStartChallenge": timeOfStartChallenge, "activeChallenge": activeChallenge, "saveBeforeChallenge": saveBeforeChallenge, "challengeOneCompletions": challengeOneCompletions, "challengeTwoCompletions": challengeTwoCompletions, "challengeThreeCompletions": challengeThreeCompletions,
                           "challengeFourCompletions": challengeFourCompletions, "challengeFiveCompletions": challengeFiveCompletions, "challengeSixCompletions": challengeSixCompletions, "challengeSevenCompletions": challengeSevenCompletions}
 
-  let challengeSetters= {"timeOfStartChallenge": setTimeOfStartChallenge, "activeChallenge": setActiveChallenge, "saveBeforeChallenge": setSaveBeforeChallenge, "challengeOneCompletions": setChallengeOneCompletions, "challengeTwoCompletions": setChallengeTwoCompletions, "challengeThreeCompletions": setChallengeThreeCompletions,
+  let challengeSetters= {"challenge1": setChallengeOneCompletions, "challenge2": setChallengeTwoCompletions, "challenge3": setChallengeThreeCompletions, "challenge4": setChallengeFourCompletions, "challenge5": setChallengeFiveCompletions, "challenge6": setChallengeSixCompletions, "challenge7": setChallengeSevenCompletions, "timeOfStartChallenge": setTimeOfStartChallenge, "activeChallenge": setActiveChallenge, "saveBeforeChallenge": setSaveBeforeChallenge, "challengeOneCompletions": setChallengeOneCompletions, "challengeTwoCompletions": setChallengeTwoCompletions, "challengeThreeCompletions": setChallengeThreeCompletions,
   "challengeFourCompletions": setChallengeFourCompletions, "challengeFiveCompletions": setChallengeFiveCompletions, "challengeSixCompletions": setChallengeSixCompletions, "challengeSevenCompletions": setChallengeSevenCompletions}
 
   

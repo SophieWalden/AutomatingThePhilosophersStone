@@ -15,6 +15,7 @@ function TabManager(props) {
     let [tab, setTab] = useState("Generators")
 
     function importGame(save){
+;
       try{
         JSON.parse(atob(save))
       } catch(e){
@@ -22,9 +23,12 @@ function TabManager(props) {
       }
   
       let importSave = JSON.parse(atob(save));
+
       for (const value in importSave){
-        if (value.indexOf("upgradeExport") == -1)
+        if (value.indexOf("upgradeExport") == -1 && (value.indexOf("challenge") == -1 && value != "activeChallenge"))
           props.setValue(value, importSave == true || importSave == false ? importSave : new Decimal(importSave[value]));
+        else if (value.indexOf("challenge") != -1 || value == "activeChallenge") 
+          props.setChallengeValue(value,importSave[value])
         else
           props.setUpgrade(value.split("upgradeExport_")[1], importSave[value]);
       }
@@ -81,6 +85,15 @@ function TabManager(props) {
       exportValues["maxFire"] = props.getValue("maxFire")
       exportValues["maxEarth"] = props.getValue("maxEarth")
       exportValues["maxAir"] = props.getValue("maxAir")
+
+      exportValues["challenge1"] = props.getChallengeValue("challengeOneCompletions");
+      exportValues["challenge2"] = props.getChallengeValue("challengeTwoCompletions");
+      exportValues["challenge3"] = props.getChallengeValue("challengeThreeCompletions");
+      exportValues["challenge4"] = props.getChallengeValue("challengeFourCompletions");
+      exportValues["challenge5"] = props.getChallengeValue("challengeFiveCompletions");
+      exportValues["challenge6"] = props.getChallengeValue("challengeSixCompletions");
+      exportValues["challenge7"] = props.getChallengeValue("challengeSevenCompletions");
+      exportValues["activeChallenge"] = props.getChallengeValue("activeChallenge");
 
       for (const upgrade in upgrades){
         exportValues["upgradeExport_" + upgrades[upgrade]] = props.getUpgradeCount(upgrades[upgrade])

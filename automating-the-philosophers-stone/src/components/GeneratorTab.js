@@ -303,6 +303,13 @@ function GeneratorTab(props) {
         buyGenerator("water")
     }
 
+    // Correcting negatives
+    if (props.getValue("fire") < 0) props.setValue("fire", 1);
+    if (props.getValue("water") < 0) props.setValue("water", 1);
+    if (props.getValue("earth") < 0) props.setValue("earth", 1);
+    if (props.getValue("air") < 0) props.setValue("air", 1);
+    if (props.getValue("space") < 0) props.setValue("space", 1);
+    if (props.getValue("aether") < 0) props.setValue("aether", 1);
 
   }
 

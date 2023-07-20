@@ -17,8 +17,8 @@ function ChallengesTab(props) {
     let blankSave = "eyJlbmVyZ3kiOiIxIiwic3BlbnRFbmVyZ3kiOiIwIiwic2FjcmlmaWNlZFRvdGFsIjoiMCIsImVuZXJneU11bHQiOiIxIiwiZmlyZSI6IjAiLCJ3YXRlciI6IjAiLCJlYXJ0aCI6IjAiLCJhaXIiOiIwIiwic3BhY2UiOiIwIiwiYWV0aGVyIjoiMCIsImZpcmVHZW5lcmF0b3JBbW91bnQiOiIwIiwid2F0ZXJHZW5lcmF0b3JBbW91bnQiOiIwIiwiZWFydGhHZW5lcmF0b3JBbW91bnQiOiIwIiwiYWlyR2VuZXJhdG9yQW1vdW50IjoiMCIsInNwYWNlR2VuZXJhdG9yQW1vdW50IjoiMCIsImFldGhlckdlbmVyYXRvckFtb3VudCI6IjAiLCJmbGFtZWJ1cnN0TXVsdCI6IjEwIiwiZmxhbWVidXJzdENoYW5jZSI6IjAuMSIsImZsYW1lYnVyc3RMZW5ndGgiOiIxIiwid2F0ZXJHZW5lcmF0b3JNdWx0IjoiMSIsInRpbWVTaW5jZVN0YXJ0T2ZHYW1lIjoiMjI0MyIsIm1heFdhdGVyIjoiMCIsIm1heEZpcmUiOiIwIiwibWF4RWFydGgiOiIwIiwibWF4QWlyIjoiMCIsInVwZ3JhZGVFeHBvcnRfZmlyZVJlcGVhdGFibGUiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMUMxIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjFDMiI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIxQzMiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMkMxIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjJDMiI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIyQzMiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJSZXBlYXRhYmxlIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIxQzEiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjFDMiI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMUMzIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIyQzEiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjJDMiI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMkMzIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoUmVwZWF0YWJsZSI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMUMxIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIxQzIiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjFDMyI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMkMxIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIyQzIiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjJDMyI6MH0="
     props.importGame(blankSave);
 
-    if (challenge == "challenge7") props.setValue("energyMult", energyMult.pow(0.5));
-    else props.setValue("energyMult", energyMult);
+    if (challenge == "challenge7") props.setValue("energyMult", energyMult.pow(0.02)); 
+    else props.setValue("energyMult", energyMult.pow(0.2));
 
     props.setValue("firstReset", false);
 
@@ -30,7 +30,12 @@ function ChallengesTab(props) {
   }
 
   function exitChallenge(){
-    if (challengeConditionCompleted()){
+    let challengeCompleted = challengeConditionCompleted();
+
+    props.importGame(props.getChallengeValue("saveBeforeChallenge"));
+    props.setChallengeValue("activeChallenge", "");
+
+    if (challengeCompleted){
       if (challenge == "challenge1") props.setChallengeValue("challengeOneCompletions", 1);
       if (challenge == "challenge2") props.setChallengeValue("challengeTwoCompletions", 1);
       if (challenge == "challenge3") props.setChallengeValue("challengeThreeCompletions", 1);
@@ -40,18 +45,14 @@ function ChallengesTab(props) {
       if (challenge == "challenge7") props.setChallengeValue("challengeSevenCompletions", 1);
     }
 
-
-    props.importGame(props.getChallengeValue("saveBeforeChallenge"));
-    props.setChallengeValue("activeChallenge", "");
-
   }
 
   function challengeConditionCompleted(){
-    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(40));
-    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(40));
-    if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(6));
-    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(7));
-    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(60));
+    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(225));
+    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(70));
+    if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
+    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(9));
+    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(40));
     if (challenge == "challenge6") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(8));
     if (challenge == "challenge7") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(10));
   }
@@ -152,7 +153,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge1" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e40 Water</h4>
+                <h4>Goal: 1e225 Water</h4>
                 <h3>Reward: Water Generator Effective count ^ 1.2</h3>
 
               </div>
@@ -160,7 +161,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge2" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e40 Earth</h4>
+                <h4>Goal: 1e70 Earth</h4>
                 <h3>Reward: Earth Production Multiplier based on Earth Generator Amount</h3>
 
               </div>
@@ -168,7 +169,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge3" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e6 Energy</h4>
+                <h4>Goal: 1e5 Energy</h4>
                 <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; 1.01^(Energy without mult))</h3>
 
               </div>
@@ -176,7 +177,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge4" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e7 Energy</h4>
+                <h4>Goal: 1e9 Energy</h4>
                 <h3>Reward: Unlock Space Generators, generating all generators of basic types</h3>
 
               </div>
@@ -184,7 +185,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge5" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e60 Fire</h4>
+                <h4>Goal: 1e40 Fire</h4>
                 <h3>Reward: Fire Generators amount is squared</h3>
 
               </div>
@@ -206,7 +207,7 @@ function ChallengesTab(props) {
               </div>
 
             </div>
-            <button onClick={() => (props.getChallengeValue("activeChallenge") == "" ? startChallenge : exitChallenge)() }><p>{props.getChallengeValue("activeChallenge") == "" ? "Start Challenge" : "End Challenge"}</p></button>
+            <button onClick={() => (props.getChallengeValue("activeChallenge") == "" ? startChallenge : exitChallenge)() }><p>{props.getChallengeValue("activeChallenge") == "" ? "Start Challenge" : (challengeConditionCompleted() ? "End Challenge" : "Exit Challenge")}</p></button>
 
           </div>
           
