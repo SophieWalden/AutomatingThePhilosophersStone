@@ -14,25 +14,7 @@ import Decimal from "break_infinity.js";
 function TabManager(props) {
     let [tab, setTab] = useState("Generators")
 
-    function importGame(save){
-;
-      try{
-        JSON.parse(atob(save))
-      } catch(e){
-        return false;
-      }
-  
-      let importSave = JSON.parse(atob(save));
-
-      for (const value in importSave){
-        if (value.indexOf("upgradeExport") == -1 && ((value.indexOf("challenge") == -1 && value != "activeChallenge" && value != "saveBeforeChallenge") || value.indexOf("Highest") != -1))
-          props.setValue(value, new Decimal(importSave[value]));
-        else if (value.indexOf("challenge") != -1 || value == "activeChallenge" || value == "saveBeforeChallenge") 
-          props.setChallengeValue(value,importSave[value])
-        else
-          props.setUpgrade(value.split("upgradeExport_")[1], importSave[value]);
-      }
-    }
+    
 
     // Upgrade Names 
     let upgrades = ["fireRepeatable", "fireUpgradeR1C1", "fireUpgradeR1C2",
@@ -135,8 +117,8 @@ function TabManager(props) {
                 getValue={props.getValue} setValue={props.setValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount}/></div>
         <div className={tab!=="Upgrades" ? "hiddenTab" : undefined}><UpgradesTab setUpgrade={props.setUpgrade} getChallengeValue={props.getChallengeValue} setValue={props.setValue} getValue={props.getValue} addValue={props.addValue} formatValues={props.formatValues} getUpgradeCount={props.getUpgradeCount} buyUpgrade={props.buyUpgrade} getUpgradeCost={props.getUpgradeCost}/></div>
         <div className={tab!=="Philosophers" ? "hiddenTab" : undefined}><PhilosophersTab getChallengeValue={props.getChallengeValue} resetAllUpgrades={props.resetAllUpgrades} addValue={props.addValue} setValue={props.setValue} formatValues={props.formatValues} getValue={props.getValue} getUpgradeCount={props.getUpgradeCount} getUpgradeCost={props.getUpgradeCost}/></div>
-        <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab formatValues={props.formatValues} getValue={props.getValue} setValue={props.setValue} exportGame={exportGame} importGame={importGame} getChallengeValue={props.getChallengeValue} setChallengeValue={props.setChallengeValue}/></div>
-        <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab exportGame={exportGame} importGame={importGame} setUpgrade={props.setUpgrade} getUpgradeCount={props.getUpgradeCount} getValue={props.getValue} setValue={props.setValue} /></div>
+        <div className={tab!=="Challenges" ? "hiddenTab" : undefined}> <ChallengesTab formatValues={props.formatValues} getValue={props.getValue} setValue={props.setValue} exportGame={exportGame} importGame={props.importGame} getChallengeValue={props.getChallengeValue} setChallengeValue={props.setChallengeValue}/></div>
+        <div className={tab!=="Options" ? "hiddenTab" : undefined}><OptionsTab exportGame={exportGame} importGame={props.importGame} setUpgrade={props.setUpgrade} getUpgradeCount={props.getUpgradeCount} getValue={props.getValue} setValue={props.setValue} /></div>
         <div className={tab!=="Formulas" ? "hiddenTab" : undefined}><FormulaTab getValue={props.getValue} formatValues={props.formatValues}/></div>
       </div>
     </div>

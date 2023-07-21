@@ -16,6 +16,20 @@
   display: none !important;
 }
 
+#endPromptButtonHolder button{
+  width: 5vw;
+  height: 5vh;
+  font-size: 0.75vw;
+  border-radius: 5px;
+  background-color: antiquewhite;
+}
+
+#endPromptButtonHolder{
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
 #endPrompt{
     position: absolute;
     z-index: 100;

@@ -350,6 +350,30 @@ function App() {
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
 }, [energy, fire, water, earth, lastResetTime, timeOfStartChallenge])
 
+    function importGame(save){
+  
+      try{
+        JSON.parse(atob(save))
+      } catch(e){
+        return false;
+      }
+  
+      let importSave = JSON.parse(atob(save));
+
+      for (const value in importSave){
+        if (value.indexOf("upgradeExport") == -1 && ((value.indexOf("challenge") == -1 && value != "activeChallenge" && value != "saveBeforeChallenge") || value.indexOf("Highest") != -1))
+          setValue(value, new Decimal(importSave[value]));
+        else if (value.indexOf("challenge") != -1 || value == "activeChallenge" || value == "saveBeforeChallenge") 
+          setChallengeValues(value,importSave[value])
+        else
+          setUpgrade(value.split("upgradeExport_")[1], importSave[value]);
+      }
+    }
+
+  function resetGame(){
+    let blankSave = "eyJlbmVyZ3kiOiIxIiwic3BlbnRFbmVyZ3kiOiIwIiwic2FjcmlmaWNlZFRvdGFsIjoiMCIsImVuZXJneU11bHQiOiIxIiwiZmlyZSI6IjAiLCJ3YXRlciI6IjAiLCJlYXJ0aCI6IjAiLCJhaXIiOiIwIiwic3BhY2UiOiIwIiwiYWV0aGVyIjoiMCIsImZpcmVHZW5lcmF0b3JBbW91bnQiOiIwIiwid2F0ZXJHZW5lcmF0b3JBbW91bnQiOiIwIiwiZWFydGhHZW5lcmF0b3JBbW91bnQiOiIwIiwiYWlyR2VuZXJhdG9yQW1vdW50IjoiMCIsInNwYWNlR2VuZXJhdG9yQW1vdW50IjoiMCIsImFldGhlckdlbmVyYXRvckFtb3VudCI6IjAiLCJmbGFtZWJ1cnN0TXVsdCI6IjEwIiwiZmxhbWVidXJzdENoYW5jZSI6IjAuMSIsImZsYW1lYnVyc3RMZW5ndGgiOiIxIiwid2F0ZXJQcm9kdWN0aW9uTXVsdCI6IjEiLCJ3YXRlckdlbmVyYXRvck11bHQiOiIxIiwibGFzdFJlc2V0VGltZSI6IjE2ODk4NjA5OTg5NDAiLCJzdGFydE9mR2FtZSI6IjE2ODk4NjA5OTg5NDAiLCJ0aW1lU2luY2VTdGFydE9mR2FtZSI6IjQ2MTc5MDkxIiwibWF4V2F0ZXIiOiIwIiwibWF4RmlyZSI6IjAiLCJtYXhFYXJ0aCI6IjAiLCJtYXhBaXIiOiIwIiwibWF4U3BhY2UiOiIwIiwibWF4QWV0aGVyIjoiMCIsImNoYWxsZW5nZTEiOjAsImNoYWxsZW5nZTIiOjAsImNoYWxsZW5nZTMiOjAsImNoYWxsZW5nZTQiOjAsImNoYWxsZW5nZTUiOjAsImNoYWxsZW5nZTYiOjAsImNoYWxsZW5nZTciOjAsImFjdGl2ZUNoYWxsZW5nZSI6IiIsInNhdmVCZWZvcmVDaGFsbGVuZ2UiOiIiLCJjaGFsbGVuZ2VPbmVIaWdoZXN0IjoiNC44MzU5MjI0MTYyMzkzNWUrNzc1IiwiY2hhbGxlbmdlVHdvSGlnaGVzdCI6IjAiLCJjaGFsbGVuZ2VUaHJlZUhpZ2hlc3QiOiIxLjkwOTI4Njg1Njk1NjkzMTdlKzQ4NTIiLCJjaGFsbGVuZ2VGb3VySGlnaGVzdCI6IjAiLCJjaGFsbGVuZ2VGaXZlSGlnaGVzdCI6IjAiLCJjaGFsbGVuZ2VTaXhIaWdoZXN0IjoiMi4wNzM0NzYxMzA0NzQyMTFlKzE3NiIsImNoYWxsZW5nZVNldmVuSGlnaGVzdCI6IjAiLCJ1cGdyYWRlRXhwb3J0X2ZpcmVSZXBlYXRhYmxlIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjFDMSI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIxQzIiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMUMzIjowLCJ1cGdyYWRlRXhwb3J0X2ZpcmVVcGdyYWRlUjJDMSI6MCwidXBncmFkZUV4cG9ydF9maXJlVXBncmFkZVIyQzIiOjAsInVwZ3JhZGVFeHBvcnRfZmlyZVVwZ3JhZGVSMkMzIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyUmVwZWF0YWJsZSI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMUMxIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIxQzIiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjFDMyI6MCwidXBncmFkZUV4cG9ydF93YXRlclVwZ3JhZGVSMkMxIjowLCJ1cGdyYWRlRXhwb3J0X3dhdGVyVXBncmFkZVIyQzIiOjAsInVwZ3JhZGVFeHBvcnRfd2F0ZXJVcGdyYWRlUjJDMyI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFJlcGVhdGFibGUiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjFDMSI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMUMyIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIxQzMiOjAsInVwZ3JhZGVFeHBvcnRfZWFydGhVcGdyYWRlUjJDMSI6MCwidXBncmFkZUV4cG9ydF9lYXJ0aFVwZ3JhZGVSMkMyIjowLCJ1cGdyYWRlRXhwb3J0X2VhcnRoVXBncmFkZVIyQzMiOjB9"
+    importGame(blankSave);
+  }
 
   return (
     <div className="App">
@@ -363,6 +387,10 @@ function App() {
           <h3>Thanks so much for playing!</h3> 
 
           <h5>Big Shoutouts to Jakub, incremental_gamer, Liniarc, and everyone from the Incremental Game Jam community who helped test this</h5>
+          <div id="endPromptButtonHolder">
+          <button id="endCardReset" onClick={resetGame}>RESET GAME?</button>
+          <button id="endCardContinue" onClick={() => setShowEndCard(false) || setEndCardshown(true)}>Continue</button>
+          </div>
         </div>
 
         </div>
@@ -370,7 +398,7 @@ function App() {
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy)}</span> Energy</h2>
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy.minus(spentEnergy))}</span> unspent Energy</h2>
 
-      <TabManager getChallengeValue={getChallengeValues} setChallengeValue={setChallengeValues} setUpgrade={setUpgrade} resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
+      <TabManager importGame={importGame} getChallengeValue={getChallengeValues} setChallengeValue={setChallengeValues} setUpgrade={setUpgrade} resetAllUpgrades={resetAllUpgrades} getValue={getValue} setValue={setValue} addValue={addValue} formatValues={formatValues} buyUpgrade={buyUpgrade} getUpgradeCount={getUpgradeCount} getUpgradeCost={getUpgradeCost}/>
     </div>
   );
 }
