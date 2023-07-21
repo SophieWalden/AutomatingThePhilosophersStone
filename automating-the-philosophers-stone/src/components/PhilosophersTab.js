@@ -58,23 +58,35 @@ function PhilosophersTab(props) {
 
     let elementTotal = fireEnergyContribution.plus(waterEnergyContribution).plus(earthEnergyContribution).plus(airEnergyContribution).plus(spaceEnergyContribution).plus(aetherEnergyContribution);
 
-    if (elementTotal.dividedBy(100).lessThanOrEqualTo(0.5)) elementTotal = new Decimal(2).plus(elementTotal.times(10))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(5)) elementTotal = new Decimal(50).plus(elementTotal.times(5))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(25)) elementTotal = new Decimal(500).plus(elementTotal.log(1.002))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(50)) elementTotal = new Decimal(2500).plus(elementTotal.log(1.05))
-    else if (elementTotal.dividedBy(100).lessThanOrEqualTo(75)) elementTotal = new Decimal(12500).plus(elementTotal.log(1.01))
-    else elementTotal = new Decimal(200000).plus(elementTotal.log(1.05))
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2"))){
+      let timeSinceLastReset = (Date.now()-props.getValue("lastResetTime").toNumber()) / 1000
+      elementTotal = elementTotal.times(new Decimal(timeSinceLastReset).log(10));
+    }
 
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C2")) && props.getChallengeValue("activeChallenge") == ""){
+      elementTotal = new Decimal(elementTotal)
+      elementTotal = elementTotal.times(0.01);
+    }
 
     return new Decimal(elementTotal);
   }
 
   function getNewEnergyMult(elementTotal){
-    let newEnergyMult = new Decimal(props.formatValues(new Decimal(1.05).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
-    if (props.getChallengeValue("challengeThreeCompletions") != 1){
-      newEnergyMult = new Decimal(1.01).pow(elementTotal.greaterThan(props.getValue("sacrifiedTotal")) ? elementTotal : props.getValue("sacrificedTotal"));
+    //let newEnergyMult  = new Decimal(1).plus(Decimal.log(elementTotal.plus(1), 10)).pow(1.2); 6/10, could be adjusted
+    //let newEnergyMult = new Decimal(5).times(new Decimal(Decimal.log10(elementTotal))).floor(); 2/1 0, way too steep
+    //let newEnergyMult = elementTotal.plus(4/3).times(2).pow(1/3).minus(new Decimal(4/3).pow(1/3)); 7/10 gets stuck at air, but pretty good before that
+    let newEnergyMult = elementTotal.plus(4/3).pow(1/2).minus(new Decimal(4/3).pow(1/2));
+    
+    if (props.getChallengeValue("challengeThreeCompletions") == 1){
+     newEnergyMult = newEnergyMult.pow(new Decimal(1.01).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))
     }
 
+    if (props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR3C2")) && props.getChallengeValue("activeChallenge") == ""){
+      newEnergyMult = newEnergyMult.times(200);
+    }
+
+    
+    
     if (props.getChallengeValue("activeChallenge") == "challenge7") newEnergyMult = newEnergyMult.pow(0.5);
 
     return newEnergyMult;
@@ -125,13 +137,13 @@ function PhilosophersTab(props) {
             <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
                 
                 <h3>Robot Takeover</h3>
-                <p>All basic autobuyer upgrades are permentaly on without costing energy</p>
+                <p>All basic autobuyer unlocked and 2x upgrades are autobought</p>
                 <h4>Unlocks at {props.getValue("philosopherR2C1").toNumber()}% Filled</h4>
 
             </button>
               <button disabled={true} className={props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != ""  ? "unlocked" : ""} >
-                  <h3>Hassle Ender</h3>
-                  <p>Unlock an autobuyer that automatically buys 2x upgrades</p>
+                  <h3>Generator</h3>
+                  <p>Gain a reset multiplier based on time in current reset</p>
                   <h4>Unlocks at {props.getValue("philosopherR2C2").toNumber()}% Filled</h4>
 
               </button>

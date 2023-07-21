@@ -19,6 +19,7 @@ function ChallengesTab(props) {
 
     
     props.setValue("energyMult", energyMult.pow(0.2));
+    props.setValue("energy", new Decimal(15));
 
     props.setValue("firstReset", false);
 
@@ -38,7 +39,6 @@ function ChallengesTab(props) {
 
     props.importGame(props.getChallengeValue("saveBeforeChallenge"));
     props.setChallengeValue("activeChallenge", "");
-    console.log(Decimal.max(props.getValue(getHighestName(currentChallenge)), getHighestName(currentChallenge)));
     props.setValue(getHighestName(currentChallenge), Decimal.max(props.getValue(getHighestName(currentChallenge)), highest))
 
     if (challengeCompleted){
@@ -69,13 +69,13 @@ function ChallengesTab(props) {
   }
 
   function challengeConditionCompleted(){
-    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(225));
-    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(70));
+    if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(150));
+    if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(210));
     if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
-    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(9));
-    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(40));
-    if (challenge == "challenge6") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(8));
-    if (challenge == "challenge7") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(10));
+    if (challenge == "challenge4") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
+    if (challenge == "challenge5") return props.getValue("fire").greaterThanOrEqualTo(new Decimal(10).pow(130));
+    if (challenge == "challenge6") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(4).times(new Decimal(10).pow(4)));
+    if (challenge == "challenge7") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(4));
   }
 
   function getChallengeCompletions(){
@@ -150,7 +150,7 @@ function ChallengesTab(props) {
           <div className={challenge != "challenge4" ? "challengeDisabled challengeDescription" : "challengeDescription"}>
             <h2>Challenge 4: Silver (Symbol ☽) </h2>
 
-            <p>Silver has a halflife of 439 years, but just for you we can accelerate it to 1 minute! Production is halved every minute</p>
+            <p>Silver has a halflife of 439 years, but just for you we can accelerate it to 1 minute! Production is halved every 20 seconds after the first minute</p>
           </div>
 
           <div className={challenge != "challenge5" ? "challengeDisabled challengeDescription" : "challengeDescription"}>
@@ -177,7 +177,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge1" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e225 Water</h4>
+                <h4>Goal: 1e150 Water</h4>
                 <h3>Reward: Water Generator Effective count ^ ({props.formatValues(new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2))})</h3>
 
               </div>
@@ -185,7 +185,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge2" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e70 Earth</h4>
+                <h4>Goal: 1e210 Earth</h4>
                 <h3>Reward: Earth Production Multiplier based on Earth Generator Amount and Highest Earth in this Challenge ({props.formatValues(props.getValue("earthGeneratorAmount").times(new Decimal(props.getValue("challengeTwoHighest").plus(1).log(10)).plus(1)))}x)</h3>
 
               </div>
@@ -194,14 +194,14 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e5 Energy</h4>
-                <h3>Reward: Energy Multiplier formula improved (1.004^(Energy without mult) -&gt; {props.formatValues(new Decimal(1.05).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))}^(Energy without mult))</h3>
+                <h3>Reward: Energy Multiplier formula improved (energyMult^{props.formatValues(new Decimal(1.01).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))})</h3>
 
               </div>
 
               <div className={challenge != "challenge4" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e9 Energy</h4>
+                <h4>Goal: 1e5 Energy</h4>
                 <h3>Reward: Unlock Space Generators, generating all generators of basic types</h3>
 
               </div>
@@ -209,7 +209,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge5" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e40 Fire</h4>
+                <h4>Goal: 1e130 Fire</h4>
                 <h3>Reward: Fire Generators^{props.formatValues(new Decimal(1.8).plus(new Decimal(props.getValue("challengeFiveHighest").plus(1).log(1000000)).dividedBy(10)))}</h3>
 
               </div>
@@ -217,7 +217,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge6" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e8 Energy</h4>
+                <h4>Goal: 4e4 Energy</h4>
                 <h3>Reward: Giant scaling multiplier based on time played ({props.formatValues(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)).times(props.getValue("challengeSixHighest").log(10)))})</h3>
 
               </div>
@@ -225,7 +225,7 @@ function ChallengesTab(props) {
               <div className={challenge != "challenge7" ? "challengeDisabled" : ""}>
 
 
-                <h4>Goal: 1e10 Energy</h4>
+                <h4>Goal: 1e4 Energy</h4>
                 <h3>Reward: Unlock Aether generator, generating pure energy</h3>
 
               </div>

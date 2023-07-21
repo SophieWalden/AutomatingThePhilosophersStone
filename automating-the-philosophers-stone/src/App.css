@@ -2,6 +2,44 @@
   text-align: center;
 }
 
+#endPromptHolder{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+}
+
+.displayNone{
+  display: none !important;
+}
+
+#endPrompt{
+    position: absolute;
+    z-index: 100;
+    background-color: #331D2C;
+    width: 40vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+
+#cancelEndButton{
+  background-color: #A78295 !important;
+  width: 3vw !important;
+  height: 3vw !important;
+  position: absolute;
+  left: 37vw;
+  bottom: 35vh;
+}
+
+
+
 button{
   color: black;
 }

@@ -129,7 +129,11 @@ function GeneratorTab(props) {
 
     
     // Air
-    let newAir = getGeneratorAmount("air").times(deltaTime)
+    let newAir = getGeneratorAmount("air").times(deltaTime).times(props.getValue("air").dividedBy(10).plus(1));
+
+    if (newAir.greaterThanOrEqualTo(new Decimal(10).pow(50))){
+        newAir = newAir.times(new Decimal(newAir.dividedBy(Decimal.log(newAir, 10)).dividedBy(2)).dividedBy(newAir));
+    }
 
     props.addValue("air", newAir);
     
@@ -157,18 +161,16 @@ function GeneratorTab(props) {
 
     newEarth = newEarth.times(new Decimal(2).pow(props.getUpgradeCount("earthRepeatable")))
 
-    
-
-    if (props.getChallengeValues("activeChallenge") == "challenge4"){
-        newEarth = newEarth.times(props.getValue("productionMult"))
-    }
-
-
-
     if (props.getChallengeValue("challengeSixCompletions")){
         newEarth = newEarth.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)).times(props.getValue("challengeSixHighest").log(10)));
     }
 
+    
+    newEarth = newEarth.pow(new Decimal(1.05).pow(props.getUpgradeCount("earthUpgradeR2C2")))
+
+    if (props.getChallengeValues("activeChallenge") == "challenge4" || props.getChallengeValues("activeChallenge") == "challenge6"){
+        newEarth = newEarth.times(props.getValue("productionMult"))
+    }
     
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newEarth = newEarth.pow(0.5);
@@ -180,10 +182,6 @@ function GeneratorTab(props) {
     
     // Water
     let newWater = (getGeneratorAmount("water").times(new Decimal(5).pow(props.getUpgradeCount("waterUpgradeR2C3")))).pow(props.getChallengeValue("challengeOneCompletions") * 0.2 + 1).times(deltaTime);
-
-    if (props.getUpgradeCount("earthUpgradeR2C2") == 1){
-        newWater = newWater.plus(newEarth.times(0.01));
-    }
 
     newWater = newWater.times(props.getValue("air").plus(1))
 
@@ -211,7 +209,11 @@ function GeneratorTab(props) {
         newWater = newWater.times(earthR2C3prod[0]);
     }
 
-    if (props.getChallengeValues("activeChallenge") == "challenge4"){
+    newWater = newWater.times(new Decimal(1.01).pow(props.getUpgradeCount("waterUpgradeR2C2")).pow((props.getUpgradeCount("waterUpgradeR1C1") + props.getUpgradeCount("waterUpgradeR1C2") + props.getUpgradeCount("waterUpgradeR1C3")
+    + props.getUpgradeCount("waterUpgradeR2C1") + props.getUpgradeCount("waterUpgradeR2C2") + props.getUpgradeCount("waterUpgradeR2C3")
+     + props.getUpgradeCount("waterRepeatable"))));
+
+    if (props.getChallengeValues("activeChallenge") == "challenge4" || props.getChallengeValues("activeChallenge") == "challenge6"){
         newWater = newWater.times(props.getValue("productionMult"))
     }
 
@@ -228,10 +230,6 @@ function GeneratorTab(props) {
 
     // Fire
     let newFire = getGeneratorAmount("fire").times(deltaTime);
-    
-    if (props.getUpgradeCount("waterUpgradeR2C2") == 1){
-        newFire = newFire.plus(newWater.times(0.01));
-    }
 
     newFire = newFire.times(props.getValue("air").plus(1))
 
@@ -265,6 +263,10 @@ function GeneratorTab(props) {
     }
 
 
+    if (props.getChallengeValue("challengeSixCompletions")){
+        newFire = newFire.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
+    }
+
 
     if (earthR2C3prod[1] == "fire"){
         newFire = newFire.times(earthR2C3prod[0]);
@@ -274,10 +276,7 @@ function GeneratorTab(props) {
         newFire = newFire.times(props.getValue("productionMult"))
     }
 
-    if (props.getChallengeValue("challengeSixCompletions")){
-        newFire = newFire.times(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)));
-    }
-
+  
     if (props.getChallengeValue("activeChallenge") == "challenge7") newFire = newFire.pow(0.5);
 
     if (["challenge1", "challenge2"].indexOf(props.getChallengeValues("activeChallenge")) != -1) newFire = new Decimal(0);
@@ -299,17 +298,17 @@ function GeneratorTab(props) {
 
     if (props.getChallengeValue("activeChallenge") == "challenge7") newAether = newAether.pow(0.5);
 
-    props.addValue("aether", newAether.pow(0.5))
+    props.addValue("aether", newAether.times(100000))
 
     // Autobuyers
-    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("fire").greaterThanOrEqualTo(props.getUpgradeCost("fireRepeatable")[0])){
         buyMax("fireRepeatable");
     }
     else if ((props.getUpgradeCount("fireUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("fire")){
         buyGenerator("fire");
     }
 
-    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("earth").greaterThanOrEqualTo(props.getUpgradeCost("earthRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("earth").greaterThanOrEqualTo(props.getUpgradeCost("earthRepeatable")[0])){
         buyMax("earthRepeatable");
     }
     else if ((props.getUpgradeCount("earthUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("earth")){
@@ -317,7 +316,7 @@ function GeneratorTab(props) {
     }
 
 
-    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C2")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("water").greaterThanOrEqualTo(props.getUpgradeCost("waterRepeatable")[0])){
+    if ((props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && props.getValue("water").greaterThanOrEqualTo(props.getUpgradeCost("waterRepeatable")[0])){
         buyMax("waterRepeatable");
     }
     else if ((props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge") != "") && canYouBuyGenerator("water")){

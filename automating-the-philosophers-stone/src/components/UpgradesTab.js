@@ -29,7 +29,6 @@ function UpgradesTab(props) {
 
     props.addValue(element, costForAmount.times(-1));
     props.setUpgrade(upgrade, props.getUpgradeCount(upgrade) + amount);
-    //props.buyUpgrade(upgrade, 5000000);
   }
 
   function upgradeIsBuyable(upgrade){
@@ -139,7 +138,7 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge")} className={`Upgrade ${upgradeIsBuyable("waterUpgradeR1C3") && !(props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1"))) ? "buyable" : ""}`} onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
+              <button disabled={props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1")) || props.getChallengeValue("activeChallenge")} className={`Upgrade ${upgradeIsBuyable("waterUpgradeR1C3") && !(props.getChallengeValue("activeChallenge") != "" || props.getUpgradeCount("waterUpgradeR1C3") == 1 || props.getValue("sacrificedTotal").dividedBy(100).greaterThanOrEqualTo(props.getValue("philosopherR2C1"))) ? "buyable" : ""}`} onClick={() => props.buyUpgrade("waterUpgradeR1C3")} >
                   <h3>Fluidic Flow</h3>
                   <p>Autobuyer buys a water generator every tick</p>
                   <h5> &nbsp;</h5>
@@ -158,10 +157,12 @@ function UpgradesTab(props) {
 
               </button>
 
-              <button  className={`Upgrade ${upgradeIsBuyable("waterUpgradeR2C2") && props.getUpgradeCount("waterUpgradeR2C2") != 1 ? "buyable" : ""}`} disabled={props.getUpgradeCount("waterUpgradeR2C2") == 1} onClick={() => props.buyUpgrade("waterUpgradeR2C2")} >
-                    <h3>Ignited Hydration</h3>
-                    <p>Gain 1% of your water production as fire</p>
-                    <h5> &nbsp;</h5>
+              <button  className={`Upgrade ${upgradeIsBuyable("waterUpgradeR2C2") ? "buyable" : ""}`} onClick={() => props.buyUpgrade("waterUpgradeR2C2")} >
+                    <h3>Hosed Down</h3>
+                    <p>Multiplier based on amount of water upgrades purchased</p>
+                    <h5>Current: {props.formatValues(new Decimal(1.01).pow(props.getUpgradeCount("waterUpgradeR2C2")).pow((props.getUpgradeCount("waterUpgradeR1C1") + props.getUpgradeCount("waterUpgradeR1C2") + props.getUpgradeCount("waterUpgradeR1C3")
+                               + props.getUpgradeCount("waterUpgradeR2C1") + props.getUpgradeCount("waterUpgradeR2C2") + props.getUpgradeCount("waterUpgradeR2C3")
+                                + props.getUpgradeCount("waterRepeatable"))))}x</h5>
                     
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("waterUpgradeR2C2")[0])} {props.getUpgradeCost("waterUpgradeR2C2")[1]}</h4>
 
@@ -236,15 +237,15 @@ function UpgradesTab(props) {
                   
               </button>
 
-              <button disabled={props.getUpgradeCount("earthUpgradeR2C2") == 1} className={`Upgrade ${upgradeIsBuyable("earthUpgradeR2C2") && props.getUpgradeCount("earthUpgradeR2C2") != 1 ? "buyable" : ""}`} onClick={() => props.buyUpgrade("earthUpgradeR2C2") } >
-                    <h3>Dissolvation</h3>
-                    <p>Gain 1% of your earth production as water</p>
-                    <h5>&nbsp;</h5>
+              <button className={`Upgrade ${upgradeIsBuyable("earthUpgradeR2C2") ? "buyable" : ""}`} onClick={() => props.buyUpgrade("earthUpgradeR2C2") } >
+                    <h3>Dirt^2</h3>
+                    <p>Raise earth production to an exponent</p>
+                    <h5>Currnet: ^{props.formatValues(new Decimal(1.05).pow(props.getUpgradeCount("earthUpgradeR2C2")))}</h5>
                     <h4>Cost: {props.formatValues(props.getUpgradeCost("earthUpgradeR2C2")[0])} {props.getUpgradeCost("earthUpgradeR2C2")[1]}</h4>
 
               </button>
 
-              <button className={`Upgrade ${upgradeIsBuyable("earthUpgradeR2C3") && props.getUpgradeCount("earthUpgradeR2C3") != 1 ? "buyable" : ""}`} onClick={() => props.buyUpgrade("earthUpgradeR2C3")} >
+              <button className={`Upgrade ${upgradeIsBuyable("earthUpgradeR2C3") ? "buyable" : ""}`} onClick={() => props.buyUpgrade("earthUpgradeR2C3")} >
                     <h3>Terraform</h3>
                     <p>Multiplier to generator contributing most to energy</p>
                     <h5>Current: {props.formatValues(new Decimal(10000).pow(props.getUpgradeCount("earthUpgradeR2C3")))}x</h5>

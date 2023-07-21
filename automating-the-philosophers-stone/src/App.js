@@ -84,12 +84,12 @@ function App() {
   let [firstReset, setFirstReset] = useState(true);
 
   // Philosopher Unlocks (5 = unlocks at 5%)
-  let [philosopherR1C1, setPhilosopherR1C1] = useState(new Decimal(3.5));
-  let [philosopherR1C2, setPhilosopherR1C2] = useState(new Decimal(5));
-  let [philosopherR2C1, setPhilosopherR2C1] = useState(new Decimal(15));
-  let [philosopherR2C2, setPhilosopherR2C2] = useState(new Decimal(20));
-  let [philosopherR3C1, setPhilosopherR3C1] = useState(new Decimal(30));
-  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(39));
+  let [philosopherR1C1, setPhilosopherR1C1] = useState(new Decimal(0.3));
+  let [philosopherR1C2, setPhilosopherR1C2] = useState(new Decimal(3));
+  let [philosopherR2C1, setPhilosopherR2C1] = useState(new Decimal(4));
+  let [philosopherR2C2, setPhilosopherR2C2] = useState(new Decimal(5));
+  let [philosopherR3C1, setPhilosopherR3C1] = useState(new Decimal(12));
+  let [philosopherR3C2, setPhilosopherR3C2] = useState(new Decimal(30));
 
   function formatValues(value, decimalMode){
     value = new Decimal(value);
@@ -226,13 +226,13 @@ function App() {
   function getUpgradeCost(upgrade){
     let costs = {"fireRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("fireRepeatable"))), "fire"],
                  "fireUpgradeR1C1": [new Decimal(3), "energy"],"fireUpgradeR1C2": [new Decimal(5), "energy"],"fireUpgradeR1C3": [new Decimal(15), "energy"],
-                 "fireUpgradeR2C1": [new Decimal(10).times(new Decimal(2).pow( getUpgradeCount("fireUpgradeR2C1"))), "energy"], "fireUpgradeR2C2": [(new Decimal(15).times(new Decimal(1.5).pow(getUpgradeCount("fireUpgradeR2C2")))).ceil(), "energy"], "fireUpgradeR2C3": [new Decimal(25), "energy"],
+                 "fireUpgradeR2C1": [new Decimal(10).times(new Decimal(2).pow( getUpgradeCount("fireUpgradeR2C1"))), "energy"], "fireUpgradeR2C2": [(new Decimal(15).times(new Decimal(1.5).pow(getUpgradeCount("fireUpgradeR2C2")))).ceil(), "energy"], "fireUpgradeR2C3": [new Decimal(20).pow(new Decimal(1.1).pow(getUpgradeCount("fireUpgradeR2C3") + (1))).floor(), "energy"],
                  "waterRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("waterRepeatable"))), "water"],
                  "waterUpgradeR1C1": [new Decimal(4), "energy"],"waterUpgradeR1C2": [new Decimal(7), "energy"],"waterUpgradeR1C3": [new Decimal(15), "energy"],
-                 "waterUpgradeR2C1": [new Decimal(15), "energy"], "waterUpgradeR2C2": [new Decimal(20), "energy"], "waterUpgradeR2C3": [new Decimal(40).pow(new Decimal(1.1).pow(getUpgradeCount("waterUpgradeR2C3") + (1))).floor(), "energy"],
+                 "waterUpgradeR2C1": [new Decimal(15), "energy"], "waterUpgradeR2C2": [new Decimal(10).pow(new Decimal(1.3).pow(getUpgradeCount("waterUpgradeR2C2") + (1))).floor(), "energy"], "waterUpgradeR2C3": [new Decimal(40).pow(new Decimal(1.1).pow(getUpgradeCount("waterUpgradeR2C3") + (1))).floor(), "energy"],
                  "earthRepeatable": [new Decimal(5).times(new Decimal(5).pow(getUpgradeCount("earthRepeatable"))), "earth"],
                  "earthUpgradeR1C1": [new Decimal(5), "energy"],"earthUpgradeR1C2": [new Decimal(10), "energy"],"earthUpgradeR1C3": [new Decimal(15), "energy"],
-                 "earthUpgradeR2C1": [new Decimal(15), "energy"], "earthUpgradeR2C2": [new Decimal(20), "energy"], "earthUpgradeR2C3": [new Decimal(40).pow(new Decimal(1.1).pow(getUpgradeCount("earthUpgradeR2C3") + (1))).floor(), "energy"]}
+                 "earthUpgradeR2C1": [new Decimal(15), "energy"], "earthUpgradeR2C2": [new Decimal(10).pow(new Decimal(1.5).pow(getUpgradeCount("earthUpgradeR2C2") + (1))).floor(), "energy"], "earthUpgradeR2C3": [new Decimal(40).pow(new Decimal(1.1).pow(getUpgradeCount("earthUpgradeR2C3") + (1))).floor(), "energy"]}
 
     let costMult = 1;
     if (activeChallenge == "challenge3"){
@@ -324,14 +324,23 @@ function App() {
   }
 
   function updateChallengeModifiers(){
-    if (activeChallenge == "challenge4"){ // Half production every minute
-      setProductionMult(mult => mult.dividedBy(1.0005))
+    let timeSinceStartOfChallenge = Date.now() - getChallengeValues("timeOfStartChallenge");
+    if (activeChallenge == "challenge4" && timeSinceStartOfChallenge / 1000 > 60){ // Half production every minute
+      setProductionMult(mult => mult.dividedBy(1.005))
     }
-
+    
     if (activeChallenge == "challenge6"){
-      if (Date.now() - timeOfStartChallenge >= 2 * 60 * 1000){
-        setProductionMult(mult => mult.dividedBy(2));
+      if (timeSinceStartOfChallenge >= 2 * 60 * 1000){
+        setProductionMult(mult => mult.dividedBy(2000000));
       }
+    }
+  }
+  let [showEndCard, setShowEndCard] = useState(false);  
+  let [endCardShown, setEndCardshown] = useState(false);
+  function updateEndCard(){
+    if (sacrificedTotal > 10000 && endCardShown == false){
+      setShowEndCard(true);
+      setEndCardshown(true);
     }
   }
 
@@ -342,14 +351,28 @@ function App() {
         calculateTimeSinceLastReset();
         updateMaxValues();
         updateChallengeModifiers();
+        updateEndCard();
     }, 33);
     
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
 }, [energy, fire, water, earth, lastResetTime, timeOfStartChallenge])
 
-  
+
   return (
     <div className="App">
+      
+      <div id="endPromptHolder" className={showEndCard ? "" : "displayNone"}>
+      <div id="endPrompt">
+          <button id="cancelEndButton" onClick={() => setShowEndCard(false)}>X</button>
+
+          <h2>You automated the Philosopher Stone!</h2>
+          <h4>(The key and sucess to a healthy eternal life)</h4>
+          <h3>Thanks so much for playing!</h3> 
+
+          <h5>Big Shoutouts to Jakub, incremental_gamer, Liniarc, and everyone from the Incremental Game Jam community who helped test this</h5>
+        </div>
+
+        </div>
 
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy)}</span> Energy</h2>
       <h2 className="ResourceDisplay">You have <span id="pink">{formatValues(energy.minus(spentEnergy))}</span> unspent Energy</h2>
