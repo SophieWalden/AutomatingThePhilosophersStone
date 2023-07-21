@@ -33,12 +33,14 @@ function ChallengesTab(props) {
   function exitChallenge(){
     let currentChallenge = props.getChallengeValue("activeChallenge");
     if (challenge != currentChallenge) setChallenge(currentChallenge);
-    let challengeCompleted = challengeConditionCompleted();
+    let challengeCompleted = challengeConditionCompleted(currentChallenge);
     let highest = getScalingFactor(currentChallenge);
     
 
     props.importGame(props.getChallengeValue("saveBeforeChallenge"));
     props.setChallengeValue("activeChallenge", "");
+
+
     props.setValue(getHighestName(currentChallenge), Decimal.max(props.getValue(getHighestName(currentChallenge)), highest))
 
     if (challengeCompleted){
@@ -68,7 +70,7 @@ function ChallengesTab(props) {
     if (challenge == "challenge7") return props.getValue("energy");
   }
 
-  function challengeConditionCompleted(){
+  function challengeConditionCompleted(challenge){
     if (challenge == "challenge1") return props.getValue("water").greaterThanOrEqualTo(new Decimal(10).pow(150));
     if (challenge == "challenge2") return props.getValue("earth").greaterThanOrEqualTo(new Decimal(10).pow(210));
     if (challenge == "challenge3") return props.getValue("energy").greaterThanOrEqualTo(new Decimal(10).pow(5));
