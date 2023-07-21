@@ -99,6 +99,22 @@ function OptionsTab(props) {
           <button onClick={() => resetGame()}>Reset Game</button>
 
         </div>
+        
+        <div id="optionsStoryContainer">
+          <h3>Story</h3>
+
+          <h4>You get a random call out of the blue from your doctor and he gives you the bad news</h4>
+          <h5>"Listen, you're going to die in a year and I'm not sure there's much you can do about it" The doctor says</h5>
+          <br />
+          <h4>Now you have nothing to lose, you can do anything you wanted in life, but all you really wanted is to life like 2 more years</h4>
+          <h5>(because idk you might miss out on some good Walmart sale or something)</h5>
+          <br />
+          <h4>You instantly have an idea! You've read books about Alchemy before and think to youself </h4>
+          <h5>Damn I should really get the philosophers stone</h5>
+          <br />
+          <h4>The problem is you know you're really lazy and dont want to go through all the work</h4>
+          <h5>So it seems that you're going to have to Automate the Philosophers Stone (In your basement)</h5>
+        </div>
     </div>
   );
 }
