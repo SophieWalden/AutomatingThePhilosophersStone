@@ -334,6 +334,27 @@ function App() {
         setProductionMult(mult => mult.dividedBy(2000000));
       }
     }
+
+    function getHighestName(challenge){
+      return {"challenge1": "challengeOneHighest", "challenge2": "challengeTwoHighest", "challenge3": "challengeThreeHighest",
+      "challenge4": "challengeFourHighest", "challenge5": "challengeFiveHighest", "challenge6": "challengeSixHighest", "challenge7": "challengeSevenHighest"}[challenge]
+    }
+  
+    function getScalingFactor(challenge){
+      if (challenge == "challenge1") return getValue("maxWater");
+      if (challenge == "challenge2") return getValue("maxEarth");
+      if (challenge == "challenge3") return getValue("energy");
+      if (challenge == "challenge4") return getValue("energy");
+      if (challenge == "challenge5") return getValue("maxFire");
+      if (challenge == "challenge6") return getValue("energy");
+      if (challenge == "challenge7") return getValue("energy");
+    }
+
+    
+    let currentChallenge = activeChallenge;
+    if (currentChallenge != "") setValue(getHighestName(currentChallenge), Decimal.max(getValue(getHighestName(currentChallenge)), getScalingFactor(currentChallenge)));
+
+
   }
   let [showEndCard, setShowEndCard] = useState(false);  
   let [endCardShown, setEndCardshown] = useState(false);
