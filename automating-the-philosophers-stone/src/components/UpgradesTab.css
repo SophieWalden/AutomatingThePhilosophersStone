@@ -2,6 +2,7 @@
 
 .autobuyer{
     height: 8vmin !important;
+    width: 20vmin !important;
 }
 
 .buyable{
@@ -20,10 +21,7 @@
     justify-content: space-evenly;
 }
 
-.UpgradesContainer button{
-    width: 10vw;
-    height: 20vh;
-}
+
 
 .resourceIdentifier{
     font-size: 2vmin;
