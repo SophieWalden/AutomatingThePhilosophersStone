@@ -21,15 +21,15 @@
 }
 
 .Generator h3{
-    font-size: 1.5vw;
+    font-size: 3vmin;
 }
 
 .Generator h4{
-    font-size: 1.0vw;
+    font-size: 2.0vmin;
 }
 
 .Generator p{
-    font-size: 1.0vw;
+    font-size: 2.0vmin;
 }
 
 #fireGenerator:disabled,
