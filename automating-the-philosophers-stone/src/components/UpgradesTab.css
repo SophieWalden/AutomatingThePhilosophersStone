@@ -1,7 +1,7 @@
 
 
 .autobuyer{
-    height: 8vh !important;
+    height: 8vmin !important;
 }
 
 .buyable{
@@ -25,19 +25,33 @@
     height: 20vh;
 }
 
+.resourceIdentifier{
+    font-size: 2vmin;
+}
+
 .UpgradesContainer button h3{
-    font-size: 1vw;
-    height: 2vh;
+    font-size: 2vmin;
+    height: 2vmin;
 }
 
 .UpgradesContainer button h4{
-    font-size: 0.7vw;
-    height: 1vh;
+    font-size: 1.5vmin;
+    height: 1vmin;
+}
+
+.UpgradesContainer button h5{
+    font-size: 1.25vmin;
+    height: 0.75vmin;
 }
 
 .UpgradesContainer button p{
-    font-size: 0.75vw;
-    height: 4vh;
+    font-size: 1.5vmin;
+    height: 4vmin;
+}
+
+.Upgrade{
+    width: 20vmin !important;
+    height: 20vmin !important;
 }
 
 #fireUpgrades button{

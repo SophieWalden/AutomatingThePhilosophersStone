@@ -44,7 +44,7 @@ function UpgradesTab(props) {
     
     <div className="UpgradesContainer">
         <div id="fireUpgrades">
-            <h4>You have {props.formatValues(props.getValue("fire"))} Fire</h4>
+            <h4 className="resourceIdentifier">You have {props.formatValues(props.getValue("fire"))} Fire</h4>
 
             <div className="fireUpgradesRow">
               <button disabled={props.getUpgradeCount("fireUpgradeR1C1") == 1} className={`Upgrade ${upgradeIsBuyable("fireUpgradeR1C1") && props.getUpgradeCount("fireUpgradeR1C1") != 1 ? "buyable" : ""}`} onClick={() => props.buyUpgrade("fireUpgradeR1C1")} >
@@ -119,7 +119,7 @@ function UpgradesTab(props) {
 
 
         <div id="waterUpgrades" className={`${props.getValue("energy") >= 3 || props.getValue("firstReset") == false ? "" : "notUnlocked"}`}> 
-            <h4>You have {props.formatValues(props.getValue("water"))} Water</h4>
+            <h4 className="resourceIdentifier">You have {props.formatValues(props.getValue("water"))} Water</h4>
 
             <div className="waterUpgradesRow">
               <button disabled={props.getUpgradeCount("waterUpgradeR1C1") == 1} className={`Upgrade ${upgradeIsBuyable("waterUpgradeR1C1") && props.getUpgradeCount("waterUpgradeR1C1") != 1 ? "buyable" : ""}`} onClick={() => props.buyUpgrade("waterUpgradeR1C1")} >
@@ -198,7 +198,7 @@ function UpgradesTab(props) {
 
 
         <div id="earthUpgrades" className={`${props.getValue("firstReset") == false || props.getValue("energyMult") != 1  ? "" : "notUnlocked"}`}>
-            <h4>You have {props.formatValues(props.getValue("earth"))} Earth</h4>
+            <h4 className="resourceIdentifier">You have {props.formatValues(props.getValue("earth"))} Earth</h4>
 
             <div className="earthUpgradesRow">
             <button disabled={props.getUpgradeCount("earthUpgradeR1C1") == 1} className={`Upgrade ${upgradeIsBuyable("earthUpgradeR1C1") && props.getUpgradeCount("earthUpgradeR1C1") != 1 ? "buyable" : ""}`} onClick={() => props.buyUpgrade("earthUpgradeR1C1")} >
