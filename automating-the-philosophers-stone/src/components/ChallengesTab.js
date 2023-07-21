@@ -178,6 +178,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e150 Water</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengeOneHighest"))} Water</h4>
                 <h3>Reward: Water Generator Effective count ^ ({props.formatValues(new Decimal(props.getValue("challengeOneHighest").plus(1).log(100)).dividedBy(100).plus(1.2))})</h3>
 
               </div>
@@ -186,6 +187,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e210 Earth</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengeTwoHighest"))} Earth</h4>
                 <h3>Reward: Earth Production Multiplier based on Earth Generator Amount and Highest Earth in this Challenge ({props.formatValues(props.getValue("earthGeneratorAmount").times(new Decimal(props.getValue("challengeTwoHighest").plus(1).log(10)).plus(1)))}x)</h3>
 
               </div>
@@ -194,6 +196,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e5 Energy</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengeThreeHighest"))} Energy</h4>
                 <h3>Reward: Energy Multiplier formula improved (energyMult^{props.formatValues(new Decimal(1.01).plus(new Decimal(props.getValue("challengeThreeHighest").plus(1).log(10)).dividedBy(100)))})</h3>
 
               </div>
@@ -202,6 +205,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e5 Energy</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengFourHighest"))} Energy (Increasing highest for challenge 4 has no affect)</h4>
                 <h3>Reward: Unlock Space Generators, generating all generators of basic types</h3>
 
               </div>
@@ -210,6 +214,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e130 Fire</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengeFiveHighest"))} Fire</h4>
                 <h3>Reward: Fire Generators^{props.formatValues(new Decimal(1.8).plus(new Decimal(props.getValue("challengeFiveHighest").plus(1).log(1000000)).dividedBy(10)))}</h3>
 
               </div>
@@ -218,6 +223,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 4e4 Energy</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengeSixHighest"))} Energy</h4>
                 <h3>Reward: Giant scaling multiplier based on time played ({props.formatValues(new Decimal(1.1).pow(props.getValue("timeSinceStartOfGame").log(1.01)).times(props.getValue("challengeSixHighest").log(10)))})</h3>
 
               </div>
@@ -226,6 +232,7 @@ function ChallengesTab(props) {
 
 
                 <h4>Goal: 1e4 Energy</h4>
+                <h4>Current Highest: {props.formatValues(props.getValue("challengSevenrHighest"))} Energy (Increasing highest for challenge 7 has no affect)</h4>
                 <h3>Reward: Unlock Aether generator, generating pure energy</h3>
 
               </div>

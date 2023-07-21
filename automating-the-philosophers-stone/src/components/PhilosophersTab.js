@@ -107,7 +107,8 @@ function PhilosophersTab(props) {
         <button id="philosophyResetButton" onClick={ResetEnergy}>Reset!</button>
         <h3>Reset everything, but keep your energy and get an energy mult</h3>
 
-        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(Decimal.max(props.getValue("energyMult"), getNewEnergyMult(getElementalTotal())))}x</h3>
+        <h3>{props.formatValues(props.getValue("energyMult"))}x -&gt; {props.formatValues(Decimal.max(props.getValue("energyMult"), getNewEnergyMult(getElementalTotal())))}x {props.getValue("energyMult").greaterThan(getNewEnergyMult(getElementalTotal())) ? `(Currently: ${props.formatValues(getNewEnergyMult(getElementalTotal()))})` : ""}</h3>
+        <h3>{props.formatValues(props.getValue("sacrificedTotal").dividedBy(100))}% -&gt; {props.formatValues(Decimal.max(props.getValue("sacrificedTotal").dividedBy(100), getElementalTotal().dividedBy(100)))}% </h3>
       </div>
       <div>
 
