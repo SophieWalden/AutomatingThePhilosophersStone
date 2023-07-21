@@ -337,12 +337,6 @@ function App() {
   }
   let [showEndCard, setShowEndCard] = useState(false);  
   let [endCardShown, setEndCardshown] = useState(false);
-  function updateEndCard(){
-    if (sacrificedTotal > 10000 && endCardShown == false){
-      setShowEndCard(true);
-      setEndCardshown(true);
-    }
-  }
 
   // Call update every 33 ms (update time)
   React.useEffect(() => {
@@ -351,7 +345,6 @@ function App() {
         calculateTimeSinceLastReset();
         updateMaxValues();
         updateChallengeModifiers();
-        updateEndCard();
     }, 33);
     
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
@@ -361,9 +354,9 @@ function App() {
   return (
     <div className="App">
       
-      <div id="endPromptHolder" className={showEndCard ? "" : "displayNone"}>
+      <div id="endPromptHolder" className={sacrificedTotal > 10000 && endCardShown == false ? "" : "displayNone"}>
       <div id="endPrompt">
-          <button id="cancelEndButton" onClick={() => setShowEndCard(false)}>X</button>
+          <button id="cancelEndButton" onClick={() => setShowEndCard(false) || setEndCardshown(true)}>X</button>
 
           <h2>You automated the Philosopher Stone!</h2>
           <h4>(The key and sucess to a healthy eternal life)</h4>
