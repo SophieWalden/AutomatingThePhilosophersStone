@@ -399,7 +399,7 @@ function App() {
   return (
     <div className="App">
       
-      <div id="endPromptHolder" className={sacrificedTotal > 10000 && endCardShown == false ? "" : "displayNone"}>
+      <div id="endPromptHolder" className={activeChallenge == "" && sacrificedTotal > 10000 && endCardShown == false ? "" : "displayNone"}>
       <div id="endPrompt">
           <button id="cancelEndButton" onClick={() => setShowEndCard(false) || setEndCardshown(true)}>X</button>
 
