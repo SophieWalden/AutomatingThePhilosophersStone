@@ -158,7 +158,7 @@ function ChallengesTab(props) {
           <div className={challenge != "challenge5" ? "challengeDisabled challengeDescription" : "challengeDescription"}>
             <h2>Challenge 5: Copper (Symbol ♀) </h2>
 
-            <p>The statue of liberty is made from 179,000 pounds of copper, thats alot of copper! If you did the math it would take approximately 1e40 fire to melt it, so get working and dont think of getting any pesky water or earth (which are disabled)</p>
+            <p>The statue of liberty is made from 179,000 pounds of copper, thats alot of copper! If you did the math it would take approximately 1e130 fire to melt it, so get working and dont think of getting any pesky water or earth (which are disabled)</p>
           </div>
 
           <div className={challenge != "challenge6" ? "challengeDisabled challengeDescription" : "challengeDescription"}>
