@@ -101,7 +101,6 @@ function GeneratorTab(props) {
   }
 
   function update(){
-
     // Everything that needs to be called routinely
     let deltaTime = new Decimal(33).dividedBy(1000);
 
@@ -346,7 +345,7 @@ function GeneratorTab(props) {
      props.getUpgradeCount("waterUpgradeR1C1"), props.getUpgradeCount("waterRepeatable"), props.getUpgradeCount("waterUpgradeR1C2"), props.getUpgradeCount("waterUpgradeR1C3") && canYouBuyGenerator("water"),
     props.getUpgradeCount("waterUpgradeR2C1"), props.getUpgradeCount("waterUpgradeR2C2"), props.getUpgradeCount("waterUpgradeR2C3"), props.getUpgradeCount("earthUpgradeR1C1"), props.getUpgradeCount("earthRepeatable"), props.getUpgradeCount("earthUpgradeR1C2"), props.getUpgradeCount("earthUpgradeR1C3") && canYouBuyGenerator("earth"),
     props.getUpgradeCount("earthUpgradeR2C1"), props.getUpgradeCount("earthUpgradeR2C2"), props.getUpgradeCount("earthUpgradeR2C3"), props.getUpgradeCount("fireUpgradeR1C1"), props.getValue("air"), props.getValue("airGeneratorAmount")
-            ,])
+            ,props.getValue("space"), props.getValue("aether"), props.getValue("sacrificedTotal"), props.getChallengeValue("activeChallenge"), props.getValue("timeSinceLastRebirth"), props.getValue("timeSinceStartOfGame")])
     
     let challengeDisplayNames = {"challenge1": "Challenge 1", "challenge2": "Challenge 2","challenge3": "Challenge 3", "challenge4": "Challenge 4", "challenge5": "Challenge 5", "challenge6": "Challenge 6", "challenge7": "Challenge 7"}
 

@@ -369,7 +369,7 @@ function App() {
     }, 33);
     
     return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-}, [energy, fire, water, earth, lastResetTime, timeOfStartChallenge])
+}, [energy, fire, water, earth, lastResetTime, timeOfStartChallenge, Date.now()])
 
     function importGame(save){
   
