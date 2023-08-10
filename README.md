@@ -1,4 +1,4 @@
-Still in progress! Game Jam Finishes in 2 weeks on the 22nd.
+Finished! Placed 3rd, no further updates currently planned, but you can still go play the game while I work on another!
 
 Game Jam Link: https://itch.io/jam/summer-incremental-game-jam-2023
 
